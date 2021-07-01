@@ -32,12 +32,10 @@ func SendRandomTx(c Config) {
 			continue
 		}
 		if c.TimerMode {
-			t := time.NewTicker(5 * time.Second)
-			for {
-				select {
-				case <-t.C:
-					continue
-				}
+			t := time.NewTicker(time.Duration(c.TimerDuration) * time.Second)
+			select {
+			case <-t.C:
+				continue
 			}
 		}
 		fmt.Println("Press return to submit another tx")
