@@ -290,7 +290,7 @@ func GetRandomChains() []string {
 }
 
 func GetRandomStake() types.BigInt {
-	b := types.NewInt(rand.Int63())
+	b := types.NewInt(int64(rand.Int31()))
 	return b
 }
 
@@ -301,7 +301,7 @@ func GetRandomAmount() types.BigInt {
 
 func GetRandomDomain() string {
 	prefix := "https://"
-	suffix := ":8081"
+	suffix := ".com:8081"
 	babbler := babble.NewBabbler()
 	return prefix + babbler.Babble() + suffix
 }
