@@ -133,7 +133,7 @@ func SendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
 		fmt.Println(err)
 		return
 	}
-	jsonMsg ,_ := memCodec().MarshalJSON(msg)
+	jsonMsg, _ := memCodec().MarshalJSON(msg)
 	fmt.Println(string(jsonMsg))
 	resp, err := QueryRPC(config, "/v1/client/rawtx", j)
 	if err != nil {
@@ -283,13 +283,7 @@ func GetCurrentApp(addr types.Address, config Config) (app appsTypes.Application
 func GetRandomChains() []string {
 	var chains []string
 	for i := 0; i < rand.Intn(15); i++ {
-		i := rand.Intn(5)
-		var chain string
-		if i < 3 {
-			chain = fmt.Sprintf("%04d", rand.Intn(99))
-		} else {
-			chain = fmt.Sprintf("%d", rand.Intn(20000))
-		}
+		chain := fmt.Sprintf("%04d", rand.Intn(99))
 		chains = append(chains, chain)
 	}
 	return chains
