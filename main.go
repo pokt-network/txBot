@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"time"
 )
 
 func main() {
@@ -29,6 +30,15 @@ func SendRandomTx(c Config) {
 			SendTx(c)
 		default:
 			continue
+		}
+		if c.TimerMode {
+			t := time.NewTicker(5 * time.Second)
+			for {
+				select {
+				case <-t.C:
+					continue
+				}
+			}
 		}
 		fmt.Println("Press return to submit another tx")
 		input := bufio.NewScanner(os.Stdin)

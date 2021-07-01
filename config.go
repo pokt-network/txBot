@@ -10,6 +10,8 @@ import (
 )
 
 type Config struct {
+	TimerMode        bool     `json:"timer_mode"`
+	TimerDuration    int      `json:"timer_duration_in_s"`
 	PocketEndpoint   string   `json:"pocket_endpoint"`
 	LegacyCodecMode  int      `json:"legacy_codec_mode"`
 	TransactionTypes []string `json:"transaction_types"`
