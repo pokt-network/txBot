@@ -1,0 +1,17 @@
+{
+  "pocket_endpoint": "http://127.0.0.1:8081",
+  "legacy_codec_mode": 2,
+  "transaction_types": [
+    "nodeStake",
+    "appStake",
+    "nodeUnstake",
+    "appUnstake",
+    "nodeUnjail",
+    "send"
+  ],
+  "private_keys": [
+    "5e0ecd1f07936b156964e64beb445dec3c04b6b641e7aa73dd22d0f4fdf0d894285eedd15f42c771da5069c91a887b2ec906647ae43f5e2e87edadf78d31d8b2",
+    "d563cb37d694779cf3fa7251e9406988e686fece7b00e93e9df035c2ea5ead6a389ec92aa98188dd9a772d3b2002610d4af45b555ba0ef328acf7588a4e2783b"
+  ],
+  "chain_id": "pocket_testet_playground"
+}
