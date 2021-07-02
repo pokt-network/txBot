@@ -24,7 +24,7 @@ func SendRandomTx(c Config) {
 			UnstakeNodeTransaction(c)
 		case "appUnstake":
 			UnstakeAppTransaction(c)
-		case "nodeUnajil":
+		case "nodeUnjail":
 			UnjailNodeTransaction(c)
 		case "send":
 			SendTx(c)

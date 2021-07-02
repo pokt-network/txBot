@@ -4,13 +4,12 @@
   "transaction_types": [
     "nodeStake",
     "appStake",
-    "nodeUnstake",
     "appUnstake",
     "nodeUnjail",
     "send"
   ],
   "timer_mode": true,
-  "timer_duration_in_s": 10,
+  "timer_duration_in_s": 3,
   "private_keys": [
     "49c249b58e8b6d240858c9c52755c1acf01d3f7b7df251e990fbd1879bd386275bdbfdad5ab2f7fdd0b815cc0fee2e263242bcdb8db19db23765c3cc67815e12",
     "4c758ab70a4ae1b254be684243809c34d739dcb30fcdeae63bb2317b38301298440d87986346d7f5edeb12921d6ad4782b3d92d84344afe030220d02071cc8ae",
