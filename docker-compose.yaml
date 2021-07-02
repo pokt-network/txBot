@@ -2,7 +2,6 @@ version: "3.8"
 
 # REF: https://www.cloudbooklet.com/how-to-install-nginx-and-lets-encrypt-with-docker-ubuntu-20-04/
 
-
 services:
   txbot:
     image: poktnetwork/txbot:latest 
