@@ -10,7 +10,25 @@ import (
 
 func main() {
 	c := GetConfigFromFile()
-	SendRandomTx(c)
+	// SendRandomTx(c)
+	client := GetClient()
+
+	client.Init(&c)
+
+	var height int64 = 0
+	// hash := "FCF719CA739DCCBC281B12BC0D671AAA7A015848"
+	// client.Call("GetTx", hash)
+
+	// client.Call("GetHeight", nil)
+
+	// address := "fcf719ca739dccbc281b12bc0d671aaa7a015848"
+	// client.Call("GetBalance", height, address)
+
+	// appAddress := "fcf719ca739dccbc281b12bc0d671aaa7a015848"
+	// client.Call("GetAccount", height, appAddress)
+
+	//client.Call("GetNodes", height, blockchain, page, limit, stakingStatus, jailingStatus)
+	//client.Call("GetApp", height, appAddress)
 }
 
 func SendRandomTx(c Config) {
