@@ -5,6 +5,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"strconv"
+
 	"github.com/pokt-network/pocket-core/app/cmd/rpc"
 	"github.com/pokt-network/pocket-core/codec"
 	types2 "github.com/pokt-network/pocket-core/codec/types"
@@ -20,13 +25,11 @@ import (
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	pocket "github.com/pokt-network/pocket-core/x/pocketcore"
 	"github.com/tjarratt/babble"
-	"io/ioutil"
-	"math/rand"
-	"net/http"
-	"strconv"
 )
 
 var memCDC *codec.Codec
+
+const Fee int64 = int64(10000)
 
 func memCodec() *codec.Codec {
 	if memCDC == nil {
@@ -78,12 +81,22 @@ func UnjailNodeTransaction(config Config) {
 	SendRawTx(&msg, config, signer)
 }
 
+func GetHeight(config Config) {
+	resp, err := QueryRPC(config, "/v1/query/height", []byte{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(resp)
+}
+
 func SendTx(config Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 
 	signer2 := config.GetRandomPrivateKey()
 	pk2 := signer2.PublicKey()
+
 	msg := nodesTypes.MsgSend{
 		FromAddress: types.Address(pk.Address()),
 		ToAddress:   types.Address(pk2.Address()),
@@ -117,8 +130,9 @@ func UnstakeAppTransaction(config Config) {
 }
 
 func SendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
+	fmt.Println(msg)
 	b := babble.NewBabbler()
-	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, int64(10000), b.Babble(), GetLegacyCodec(config))
+	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, Fee, b.Babble(), GetLegacyCodec(config))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -307,9 +321,7 @@ func GetRandomDomain() string {
 }
 
 func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.PrivateKey, fee int64, memo string, legacyCodec bool) (transactionBz []byte, err error) {
-	// fees
 	fees := types.NewCoins(types.NewCoin(types.DefaultStakeDenom, types.NewInt(fee)))
-	// entroyp
 	entropy := rand.Int63()
 	signBytes, err := auth.StdSignBytes(chainID, entropy, fees, msg, memo)
 	if err != nil {
@@ -320,9 +332,44 @@ func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.Pri
 		return nil, err
 	}
 	s := authTypes.StdSignature{PublicKey: pk.PublicKey(), Signature: sig}
-	tx := authTypes.NewTx(msg, fees, s, memo, entropy)
+	//func NewTx(msgs sdk.ProtoMsg, fee sdk.Coins, sig StdSignature, memo string, entropy int64) sdk.Tx {
+	stdTx := authTypes.StdTx { msg, fees, s, memo, entropy }
+	fmt.Println("signBytes INPUTS", chainID, stdTx)
+	//stdTx := authTypes.St
+	//stdTx.GetMsg()
 	if legacyCodec {
-		return auth.DefaultTxEncoder(cdc)(tx, 0)
+		return auth.DefaultTxEncoder(cdc)(stdTx, 0)
 	}
-	return auth.DefaultTxEncoder(cdc)(tx, -1)
+	fmt.Println(pk.PubKey().Address())
+	fmt.Printf(`
+		---------------------------
+		pub: %v
+		signBytes: %v %v
+		sig1: %v %v
+		Verified1: %t
+		sig2: %v %v
+		Verified2: %t
+		stdTx: %v
+		---------------------------`,
+		pk.PubKey(),
+		signBytes[0:5], signBytes[len(signBytes)-5:],
+		sig[0:5], sig[len(sig)-5:],
+		pk.PublicKey().VerifyBytes(signBytes, sig),
+		stdTx.GetSignature().GetSignature()[0:5], stdTx.GetSignature().GetSignature()[len(stdTx.GetSignature().GetSignature())-5:],
+		pk.PublicKey().VerifyBytes(signBytes, stdTx.GetSignature().GetSignature()),
+		stdTx)
+
+	fmt.Printf(`
+		~~~~~~~~~~~~~~~
+		msg: %v
+		Fees:  %v
+		Entropy: %d
+		signBytes: %v
+ 		sig: %v
+		StdSignature: %v
+		~~~~~~~~~~~
+	`, msg, fees, entropy,
+		signBytes[0:10],
+		sig, s)
+	return auth.DefaultTxEncoder(cdc)(stdTx, -1)
 }
