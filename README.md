@@ -8,4 +8,13 @@ go build
 
 
 ### Docker
-docker-compose build && docker-compose up 
+
+## Pulling 
+
+docker-compose up
+
+
+## Building/Running
+
+docker-compose build && docker-compose up
+
