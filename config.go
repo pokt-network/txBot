@@ -3,20 +3,44 @@ package main
 import (
 	"encoding/hex"
 	"encoding/json"
-	"github.com/pokt-network/pocket-core/crypto"
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"strconv"
+	"strings"
+
+	"github.com/pokt-network/pocket-core/crypto"
 )
 
-type Config struct {
-	TimerMode        bool     `json:"timer_mode"`
-	TimerDuration    int      `json:"timer_duration_in_s"`
-	PocketEndpoint   string   `json:"pocket_endpoint"`
-	LegacyCodecMode  int      `json:"legacy_codec_mode"`
-	TransactionTypes []string `json:"transaction_types"`
-	PrivateKeys      []string `json:"private_keys"`
-	ChainID          string   `json:"chain_id"`
+func (c *Config) GetRandomPrivateKey() crypto.PrivateKey {
+	return c.PrivateKeys[rand.Intn(len(c.PrivateKeys))].Key
+}
+
+func (c *Config) GetRandomTransactionType() string {
+	return c.TxReqTypes[rand.Intn(len(c.TxReqTypes))]
+}
+
+func (mode* RequestMode) UnmarshalJSON(data []byte) error {
+	i, err := strconv.Atoi(string(data))
+	if err != nil {
+		return err
+	}
+	*mode = RequestMode(i)
+	return nil
+}
+
+func (pk* PrivateKey) UnmarshalJSON(data []byte) error {
+	stringPk := strings.Trim(string(data), "\"")
+	decodedPk, err := hex.DecodeString(stringPk)
+	if err != nil {
+		return err
+	}
+	privKey, err := crypto.NewPrivateKeyBz(decodedPk)
+	if err != nil {
+		return err
+	}
+	*pk = PrivateKey{Key: privKey}
+	return nil
 }
 
 func GetConfigFromFile() Config {
@@ -31,28 +55,4 @@ func GetConfigFromFile() Config {
 		panic("Error unmarshalling config file: " + err.Error())
 	}
 	return config
-}
-
-func (c *Config) GetPrivateKeys() (pks []crypto.PrivateKey) {
-	for _, k := range c.PrivateKeys {
-		pk, err := hex.DecodeString(k)
-		if err != nil {
-			panic("Error in parsing private key to hex: " + k + " err: " + err.Error())
-		}
-		privKey, err := crypto.NewPrivateKeyBz(pk)
-		if err != nil {
-			panic("Error in parsing private key to hex: " + k + " err: " + err.Error())
-		}
-		pks = append(pks, privKey)
-	}
-	return
-}
-
-func (c *Config) GetRandomPrivateKey() crypto.PrivateKey {
-	pks := c.GetPrivateKeys()
-	return pks[rand.Intn(len(pks))]
-}
-
-func (c *Config) GetRandomTransactionType() string {
-	return c.TransactionTypes[rand.Intn(len(c.TransactionTypes))]
 }

@@ -1,20 +1,15 @@
 # TXBOT
 
-
 ### Binary
-go build
 
-./txbot
-
+go build && ./txbot
 
 ### Docker
 
-## Pulling 
+## Pulling
 
 docker-compose up
-
 
 ## Building/Running
 
 docker-compose build && docker-compose up
-

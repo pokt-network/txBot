@@ -1,1 +1,5 @@
 vendor/*
+.idea/*
+txbot
+# *.gen.go
+# spec/rpc_spec.yaml

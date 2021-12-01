@@ -1,15 +1,30 @@
 {
-  "pocket_endpoint": "http://127.0.0.1:8081",
+  "chain_id": "localnet",
+  "pocket_endpoint": "http://localhost:8081",
   "legacy_codec_mode": 0,
-  "transaction_types": [
-    "nodeStake",
+  "mode": 2,
+  "mode_configs": {
+    "timer_mode_config": {
+      "interval_ms": 5000
+    },
+    "random_mode_config": {},
+    "manual_mode_config": {},
+    "burst_mode_config": {
+      "interval_ms": 500,
+      "num_requests": 10,
+      "tx_req_name": "queryHeight"
+    }
+  },
+  "tx_req_types": [
     "appStake",
     "appUnstake",
+    "nodeSend",
+    "nodeStake",
     "nodeUnjail",
-    "send"
+    "queryHeight",
+    "relayEth",
+    "relayHmy"
   ],
-  "timer_mode": true,
-  "timer_duration_in_s": 3,
   "private_keys": [
     "49c249b58e8b6d240858c9c52755c1acf01d3f7b7df251e990fbd1879bd386275bdbfdad5ab2f7fdd0b815cc0fee2e263242bcdb8db19db23765c3cc67815e12",
     "4c758ab70a4ae1b254be684243809c34d739dcb30fcdeae63bb2317b38301298440d87986346d7f5edeb12921d6ad4782b3d92d84344afe030220d02071cc8ae",
@@ -17,6 +32,5 @@
     "177304c7ae0db0a2160dd612bcfcec9e24132574b9935474d39fd20acdf93c15c03e41757c0a887b03d626a5cd0ae74a25b958210588a5fb9579cec4225f62f1",
     "49be06d2128eb2df637a4424cc87ec0514ee9e187a2a3d1857477677f03c641c40892fc7ba027b21c0e43e7510f25f6f7553d60f11b1865bd9e1bbc5d16f8ac6",
     "95d1d7427d5922e15450d9f348694a37920f83366802f9972d1126ade6521a31ee54c980bb6d83c0b314b3f53fd5e25377b20f847f6d05c535e3acd78f5e4ba0"
-  ],
-  "chain_id": "pocket-testet-playground"
+  ]
 }
