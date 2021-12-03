@@ -1,4 +1,4 @@
-package main
+package rpc
 
 import (
 	"bytes"
@@ -25,6 +25,8 @@ import (
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	pocket "github.com/pokt-network/pocket-core/x/pocketcore"
 	"github.com/tjarratt/babble"
+
+	config "github.com/pokt-network/txbot/config"
 )
 
 var memCDC *codec.Codec
@@ -47,7 +49,7 @@ func memCodec() *codec.Codec {
 	return memCDC
 }
 
-func AppStakeTransaction(config Config) {
+func AppStakeTransaction(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgStake{
@@ -62,7 +64,7 @@ func AppStakeTransaction(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func AppUnstakeTransaction(config Config) {
+func AppUnstakeTransaction(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgBeginUnstake{
@@ -71,7 +73,7 @@ func AppUnstakeTransaction(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func NodeSendTx(config Config) {
+func NodeSendTx(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 
@@ -86,7 +88,7 @@ func NodeSendTx(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func NodeStakeTransaction(config Config) {
+func NodeStakeTransaction(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgStake{
@@ -102,7 +104,7 @@ func NodeStakeTransaction(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func NodeUnstakeTransaction(config Config) {
+func NodeUnstakeTransaction(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgBeginUnstake{
@@ -111,7 +113,7 @@ func NodeUnstakeTransaction(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func NodeUnjailTransaction(config Config) {
+func NodeUnjailTransaction(config config.Config) {
 	signer := config.GetRandomPrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgUnjail{
@@ -120,7 +122,7 @@ func NodeUnjailTransaction(config Config) {
 	sendRawTx(&msg, config, signer)
 }
 
-func sendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
+func sendRawTx(msg types.ProtoMsg, config config.Config, signer crypto.PrivateKey) {
 	fmt.Println(msg)
 	b := babble.NewBabbler()
 	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, Fee, b.Babble(), getLegacyCodec(config))
@@ -148,7 +150,7 @@ func sendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
 	fmt.Println(resp)
 }
 
-func queryRPC(config Config, path string, jsonArgs []byte) (string, error) {
+func queryRPC(config config.Config, path string, jsonArgs []byte) (string, error) {
 	cliURL := config.PocketEndpoint + path
 	req, err := http.NewRequest("POST", cliURL, bytes.NewBuffer(jsonArgs))
 	if err != nil {
@@ -209,7 +211,7 @@ func randomizeNodeStakeMsg(node nodesTypes.Validator, msg nodesTypes.MsgStake) n
 	return msg
 }
 
-func getLegacyCodec(c Config) bool {
+func getLegacyCodec(c config.Config) bool {
 	if c.LegacyCodecMode == 0 {
 		return false
 	} else if c.LegacyCodecMode == 1 {
@@ -219,7 +221,7 @@ func getLegacyCodec(c Config) bool {
 	}
 }
 
-func getCurrentNode(addr types.Address, config Config) (val nodesTypes.Validator) {
+func getCurrentNode(addr types.Address, config config.Config) (val nodesTypes.Validator) {
 	url := config.PocketEndpoint + "/v1/query/node"
 	fmt.Println("URL:>", url)
 
@@ -251,7 +253,7 @@ func getCurrentNode(addr types.Address, config Config) (val nodesTypes.Validator
 	return
 }
 
-func getCurrentApp(addr types.Address, config Config) (app appsTypes.Application) {
+func getCurrentApp(addr types.Address, config config.Config) (app appsTypes.Application) {
 	url := config.PocketEndpoint + "/v1/query/app"
 	fmt.Println("URL:>", url)
 
@@ -320,7 +322,13 @@ func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.Pri
 		return nil, err
 	}
 	s := authTypes.StdSignature{PublicKey: pk.PublicKey(), Signature: sig}
-	stdTx := authTypes.StdTx { msg, fees, s, memo, entropy }
+	stdTx := authTypes.StdTx {
+		Msg: msg,
+		Fee: fees,
+		Signature: s,
+		Memo: memo,
+		Entropy: entropy,
+	}
 	if legacyCodec {
 		return auth.DefaultTxEncoder(cdc)(stdTx, 0)
 	}

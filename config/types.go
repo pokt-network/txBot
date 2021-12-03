@@ -1,4 +1,4 @@
-package main
+package config
 
 import "github.com/pokt-network/pocket-core/crypto"
 
@@ -9,7 +9,11 @@ type TimerModeConfig struct {
 type RandomModeConfig struct {
 }
 
+type SelectModeConfig struct {
+}
+
 type ManualModeConfig struct {
+	TxReqName string `json:"tx_req_name"`
 }
 
 type BurstModeConfig struct {
@@ -21,6 +25,7 @@ type BurstModeConfig struct {
 type ModeConfig struct {
 	TimerModeConfig TimerModeConfig `json:"timer_mode_config"`
 	RandomModeConfig RandomModeConfig `json:"random_mode_config"`
+	SelectModeConfig ManualModeConfig `json:"select_mode_config"`
 	ManualModeConfig ManualModeConfig `json:"manual_mode_config"`
 	BurstModeConfig BurstModeConfig  `json:"burst_mode_config"`
 }
@@ -34,17 +39,42 @@ type RequestMode int
 
 const (
 	TimerMode RequestMode = iota  // 0
-	RandomMode	// 1
-	ManualMode  // 2
-	BurstMode   // 3
+	RandomMode  // 1
+	SelectMode  // 2
+	ManualMode  // 3
+	BurstMode   // 4
 )
+
+var RequestModeToString = map[RequestMode]string{
+	TimerMode: "timer_mode",
+	RandomMode: "random_mode",
+	SelectMode: "select_mode",
+	ManualMode: "manual_mode",
+	BurstMode: "burst_mode",
+}
+
+var RequestModeToId = map[string]RequestMode{
+	"timer_mode": TimerMode,
+	"random_mode": RandomMode,
+	"select_mode": SelectMode,
+	"manual_mode": ManualMode,
+	"burst_mode": BurstMode,
+}
+
+type AppConfig struct {
+	AppAddress string `json:"app_address"`
+	SecretKey string `json:"secret_key"`
+	PortalId string `json:"portal_id"`
+}
 
 type Config struct {
 	ChainID          string       `json:"chain_id"`
 	PocketEndpoint   string       `json:"pocket_endpoint"`
 	LegacyCodecMode  int          `json:"legacy_codec_mode"`
-	Mode 		     RequestMode  `json:"mode"`
+	Mode             RequestMode  `json:"mode"`
 	ModeConfigs      ModeConfig   `json:"mode_configs"`
 	TxReqTypes       []string     `json:"tx_req_types"`
 	PrivateKeys      []PrivateKey `json:"private_keys"`
+	EthAppConfig	 AppConfig	  `json:"eth_app_config"`
+	HmyAppConfig	 AppConfig	  `json:"hmy_app_config"`
 }

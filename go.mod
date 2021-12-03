@@ -9,6 +9,3 @@ require (
 	github.com/pokt-network/pocket-core v0.0.0-20210429190449-f794bc74b167
 	github.com/tjarratt/babble v0.0.0-20210505082055-cbca2a4833c1
 )
-
-// https://docs.harmony.one/home/developers/api/methods/account-methods/hmy_getbalancebyblocknumber
-// https://infura.io/docs/ethereum/json-rpc/eth-blockNumber

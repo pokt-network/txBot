@@ -658,13 +658,14 @@ type RelayMetadata struct {
 type RelayPayload struct {
 	// The actual data of the request string for the external chain
 	Data    *string      `json:"data,omitempty"`
-	Headers *RelayHeader `json:"headers,omitempty"`
 
 	// The HTTP CRUD method
 	Method *string `json:"method,omitempty"`
 
 	// The REST path
 	Path *string `json:"path,omitempty"`
+
+	Headers *RelayHeader `json:"headers,omitempty"`
 }
 
 // RelayProof defines model for RelayProof.

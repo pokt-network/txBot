@@ -1,8 +1,9 @@
-package main
+package config
 
 import (
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"math/rand"
 	"os"
@@ -21,12 +22,28 @@ func (c *Config) GetRandomTransactionType() string {
 }
 
 func (mode* RequestMode) UnmarshalJSON(data []byte) error {
-	i, err := strconv.Atoi(string(data))
-	if err != nil {
+
+	// Check if request mode is specified as a int.
+	if i, err := strconv.Atoi(string(data)); err == nil {
+		requestMode := RequestMode(i)
+		if _, ok := RequestModeToString[requestMode]; ok {
+			*mode = requestMode
+			return nil
+		}
+	}
+
+	// Check if request mode is specified as a string.
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
-	*mode = RequestMode(i)
-	return nil
+	if val, ok := RequestModeToId[s]; ok {
+		*mode = val
+		return nil
+	}
+
+	// Could not identify request mode.
+	return errors.New("Invalid request mode: " + s)
 }
 
 func (pk* PrivateKey) UnmarshalJSON(data []byte) error {
