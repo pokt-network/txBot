@@ -59,6 +59,7 @@ func execTransOrReq(c config.Config, client *spec.ClientWithResponses, txOrReq s
 			rpc.RelayEth(c, client, clientCtx)
 		case "relayHmy":
 			// TODO: https://docs.harmony.one/home/developers/api/methods/account-methods/hmy_getbalancebyblocknumber
+			// rpc.AppStakeTransaction(c)
 			rpc.RelayHmy(c, client, clientCtx)
 		default:
 			break

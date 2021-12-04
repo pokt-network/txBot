@@ -44,6 +44,8 @@ const (
 
 // AAT defines model for AAT.
 type AAT struct {
+	Version   *string `json:"version,omitempty"`
+
 	// Application hex public key
 	AppPubKey *string `json:"app_pub_key,omitempty"`
 
@@ -51,8 +53,7 @@ type AAT struct {
 	ClientPubKey *string `json:"client_pub_key,omitempty"`
 
 	// Application's signature in hex
-	Signature *string `json:"signature,omitempty"`
-	Version   *string `json:"version,omitempty"`
+	Signature *string `json:"signature"`
 }
 
 // ABCIEvent defines model for ABCIEvent.
@@ -424,12 +425,18 @@ type QueryDispatchResponse struct {
 	Session     *Session `json:"session,omitempty"`
 }
 
+type Error struct {
+	Code *int64 `json:"code,omitempty"`
+	Codespace *string `json:"codespace,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
 // QueryErrorRelayResponse defines model for QueryErrorRelayResponse.
 type QueryErrorRelayResponse struct {
 	Dispatch *QueryDispatchResponse `json:"dispatch,omitempty"`
 
 	// Amino JSON Error String
-	Error *string `json:"error,omitempty"`
+	Error *Error `json:"error,omitempty"`
 }
 
 // QueryHeight defines model for QueryHeight.
@@ -4619,7 +4626,6 @@ func ParsePostClientRelayResponse(rsp *http.Response) (*PostClientRelayResponse,
 			return nil, err
 		}
 		response.JSON400 = &dest
-
 	}
 
 	return response, nil
