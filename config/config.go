@@ -13,15 +13,19 @@ import (
 	"github.com/pokt-network/pocket-core/crypto"
 )
 
-func (c *Config) GetRandomPrivateKey() crypto.PrivateKey {
-	return c.PrivateKeys[rand.Intn(len(c.PrivateKeys))].Key
+func (c *Config) GetRandomNodePrivateKey() crypto.PrivateKey {
+	return c.NodePrivateKeys[rand.Intn(len(c.NodePrivateKeys))].Key
+}
+
+func (c *Config) GetRandomAppPrivateKey() crypto.PrivateKey {
+	return c.AppPrivateKeys[rand.Intn(len(c.AppPrivateKeys))].Key
 }
 
 func (c *Config) GetRandomTransactionType() string {
 	return c.TxReqTypes[rand.Intn(len(c.TxReqTypes))]
 }
 
-func (mode* RequestMode) UnmarshalJSON(data []byte) error {
+func (mode *RequestMode) UnmarshalJSON(data []byte) error {
 
 	// Check if request mode is specified as a int.
 	if i, err := strconv.Atoi(string(data)); err == nil {
@@ -46,7 +50,7 @@ func (mode* RequestMode) UnmarshalJSON(data []byte) error {
 	return errors.New("Invalid request mode: " + s)
 }
 
-func (pk* PrivateKey) UnmarshalJSON(data []byte) error {
+func (pk *PrivateKey) UnmarshalJSON(data []byte) error {
 	stringPk := strings.Trim(string(data), "\"")
 	decodedPk, err := hex.DecodeString(stringPk)
 	if err != nil {

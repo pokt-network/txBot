@@ -11,63 +11,71 @@ import (
 
 	config "github.com/pokt-network/txbot/config"
 	spec "github.com/pokt-network/txbot/spec"
-	// cryptoTypes "github.com/pokt-network/pocket-core/x/pocketcore/types"
 )
 
 const (
-	HARMONY string = "0040" // Harmony mainnet shard 0.
-	ETHEREUM string = "0021" // Ethereum mainnet.
-	IPFS string = "1111" // IPFS.
+	Harmony  string = "0040" // Harmony mainnet shard 0.
+	Ethereum string = "0021" // Ethereum mainnet.
+	IPFS     string = "1111" // IPFS.
+
+	Hasher = sha.SHA3_256
 )
 
-var Hasher = sha.SHA3_256
-
-var globalSessionBlockHeight = int64(-1)
-
-func Hash(b []byte) []byte {
-	hasher := Hasher.New()
-	hasher.Write(b) //nolint:golint,errcheck
-	return hasher.Sum(nil)
+type RpcContext struct {
+	Client             *spec.ClientWithResponses
+	Context            context.Context
+	SessionBlockHeight int64
 }
 
-func QueryHeight(config config.Config, client *spec.ClientWithResponses, clientCtx context.Context) int64 {
-	var body interface{}
-	res, err := client.PostQueryHeightWithResponse(clientCtx, body)
-	if err != nil {
-		fmt.Println("Error", err)
-		return int64(-1) // TODO: return error
+func NewRpcContext(config config.Config) *RpcContext {
+	client, clientErr := spec.NewClientWithResponses(fmt.Sprintf("%s/v1", config.PocketEndpoint))
+	if clientErr != nil {
+		panic("Could not initialize RPC client.")
 	}
-	height := *res.JSON200.Height
-	fmt.Printf("Height: %d\n", height)
-	return height
+	return &RpcContext{
+		Client:             client,
+		Context:            context.TODO(), // Not imporant at the moment.
+		SessionBlockHeight: int64(0),
+	}
 }
 
-func RelayHmy(config config.Config, client *spec.ClientWithResponses, clientCtx context.Context) {
-	data := `{"jsonrpc":"2.0", "method":"hmyv2_latestHeader", "params":[], "id":1}`
-	blockchain := HARMONY
-	Relay(blockchain, data, config, client, clientCtx)
+func QueryHeight(config config.Config, rpcCtx *RpcContext) {
+	var body interface{}
+	res, err := rpcCtx.Client.PostQueryHeightWithResponse(rpcCtx.Context, body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("Current Height: %d\n", *res.JSON200.Height)
 }
 
-func RelayEth(config config.Config, client *spec.ClientWithResponses, clientCtx context.Context) {
-	data := `{"jsonrpc":"2.0", "method":"eth_getBalance", "params":["0xe7a24E61b2ec77d3663ec785d1110688d2A32ecc", "latest"], "id":1}`
-	blockchain := ETHEREUM
-	Relay(blockchain, data, config, client, clientCtx)
+func RelayHmy(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0", "method":"hmyv2_blockNumber", "params":[], "id":1}`
+	relay(Harmony, data, config, rpcCtx)
 }
 
-func Relay(blockchain string, data string, config config.Config, client *spec.ClientWithResponses, clientCtx context.Context) {
-	// Get client keys.
-	clientPrivKey := config.GetRandomPrivateKey()
-	// fmt.Printf("Client private key: %s\n", clientPrivKey)
+func RelayEth(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0", "method":"eth_blockNumber", "params":[], "id":1}`
+	relay(Ethereum, data, config, rpcCtx)
+}
+
+func relay(blockchain string, data string, config config.Config, rpcCtx *RpcContext) {
+	appPrivKey := config.GetRandomAppPrivateKey()
+	appPubKey := appPrivKey.PublicKey().RawString()
+
+	// TODO: Randomize this after adding support for multiple pocket endpoints.
+	clientPrivKey := config.ServicerPrivateKey.Key
 	clientPubKey := clientPrivKey.PublicKey().RawString()
-	// fmt.Printf("Client pub key: %s\n", clientPubKey)
 
 	// Get the blockchain service node.
-	// serviceNode := getBlockchainServiceNode(blockchain, client, clientCtx)
+	serviceNode := getServiceNode(clientPrivKey.PublicKey().Address().String(), rpcCtx)
+	if serviceNode == nil {
+		fmt.Println("Could not find service node for key:", clientPubKey)
+		return
+	}
 
 	// Prepare metadata.
-	blockHeight := int64(1) // Does this need to match the current pocket height?
 	meta := spec.RelayMetadata{
-		BlockHeight: &blockHeight,
+		BlockHeight: &rpcCtx.SessionBlockHeight,
 	}
 
 	// Prepare payload.
@@ -75,15 +83,15 @@ func Relay(blockchain string, data string, config config.Config, client *spec.Cl
 		AdditionalProperties: make(map[string]string),
 	}
 	method := "POST"
-	path := "" // TODO: What shold this be?
+	path := "" // TODO: What should this be?
 	payload := spec.RelayPayload{
-		Data: &data,
-		Method: &method,
-		Path: &path,
+		Data:    &data,
+		Method:  &method,
+		Path:    &path,
 		Headers: &headers,
 	}
 
-	// Prepare request.
+	// Prepare request. NOTE: request serialization need to be customized.
 	request := struct {
 		Payload spec.RelayPayload  `json:"payload"`
 		Meta    spec.RelayMetadata `json:"meta"`
@@ -92,80 +100,50 @@ func Relay(blockchain string, data string, config config.Config, client *spec.Cl
 	// Compute request hash.
 	requestBytes, err := json.Marshal(request)
 	if err != nil {
-		fmt.Println("Error", err)
+		fmt.Println(err)
 		return
 	}
-	requestHash := Hash(requestBytes)
+	requestHash := hash(requestBytes)
 	requestHashString := hex.EncodeToString(requestHash)
-
-	// indented, _ := json.MarshalIndent(request, "", "  ")
-	// fmt.Printf("%s \n\n %v \n\n %s \n\n %v \n\n", string(indented), requestBytes, requestHashString, requestHash)
 
 	// Prepare AAT.
 	aatVersion := "0.0.1"
-	appPubKey := clientPubKey // Is this okay?
-	appPrivKey := clientPrivKey
 	aat := spec.AAT{
-		AppPubKey: &appPubKey,
+		AppPubKey:    &appPubKey,
 		ClientPubKey: &clientPubKey,
-		Signature: new(string),
-		Version: &aatVersion,
+		Signature:    new(string),
+		Version:      &aatVersion,
 	}
 
 	// Sign AAT.
 	aatBytes, err := json.Marshal(aat)
 	if err != nil {
-		fmt.Println("Error", err)
+		fmt.Println(err)
 		return
 	}
-	aatHash := Hash(aatBytes)
+	aatHash := hash(aatBytes)
 	appSig, err := appPrivKey.Sign(aatHash)
 	if err != nil {
-		fmt.Println("Error", err)
+		fmt.Println(err)
 		return
 	}
 	appSigString := hex.EncodeToString(appSig)
-	// fmt.Printf("%v \n\n %v \n\n", appSigString, hex.EncodeToString(aatHash))
-	// fmt.Println("---", string(aatBytes), hex.EncodeToString(aatHash))
 	aat.Signature = &appSigString
-
-	// fmt.Println(appPrivKey.PublicKey().RawString(),hex.EncodeToString(aatHash), appSigString)
-	// t_sig, _ := hex.DecodeString(appSigString)
-	// t_pk, _ := crypto.NewPublicKey(appPrivKey.PublicKey().RawString())
-	// t_msg, _ := hex.DecodeString(hex.EncodeToString(aatHash))
-	// fmt.Println(t_sig, t_pk, t_msg)
-	// if ok := t_pk.VerifyBytes(t_msg, t_sig); !ok {
-	// 	fmt.Println("FAILED")
-	// } else {
-	// 	fmt.Println("OK")
-	// }
-
-	// if ok := appPrivKey.PublicKey().VerifyBytes(aatHash, appSig); !ok {
-	// 	fmt.Println("FAILED")
-	// } else {
-	// 	fmt.Println("OK")
-	// }
 
 	// Prepare proof.
 	entropy := int64(rand.Uint32())
-	// sessionBlockHeight := QueryHeight(config, client, clientCtx)// - 1
-	sessionBlockHeight := globalSessionBlockHeight
-
-	servicerPubKey := "eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743"
-	// servicerPubKey := serviceNode.PublicKey
-	// if servicerPubKey == nil {
-	// 	return
-	// }
+	servicerPubKey := *serviceNode.PublicKey
 	proof := spec.RelayProof{
-		Aat: &aat,
-		Blockchain: &blockchain,
-		Entropy: &entropy,
-		RequestHash: &requestHashString,
-		ServicerPubKey: &servicerPubKey,
-		SessionBlockHeight: &sessionBlockHeight,
-		Signature: new(string),
+		Aat:                &aat,
+		Blockchain:         &blockchain,
+		Entropy:            &entropy,
+		RequestHash:        &requestHashString,
+		ServicerPubKey:     &servicerPubKey,
+		SessionBlockHeight: &rpcCtx.SessionBlockHeight,
+		Signature:          new(string),
 	}
 
+	// NOTE: proof serialization need to be customized.
 	proofForSig := struct {
 		Entropy            int64  `json:"entropy"`
 		SessionBlockHeight int64  `json:"session_block_height"`
@@ -174,97 +152,76 @@ func Relay(blockchain string, data string, config config.Config, client *spec.Cl
 		Signature          string `json:"signature"`
 		Token              string `json:"token"`
 		RequestHash        string `json:"request_hash"`
-	}{entropy, sessionBlockHeight, servicerPubKey, blockchain, "", hex.EncodeToString(aatHash), requestHashString}
-
-	fmt.Println()
+	}{entropy, rpcCtx.SessionBlockHeight, servicerPubKey, blockchain, "", hex.EncodeToString(aatHash), requestHashString}
 
 	// Sign proof.
 	proofBytes, err := json.Marshal(proofForSig)
 	if err != nil {
-		fmt.Println("Error", err)
+		fmt.Println(err)
 		return
 	}
-	proofHash := Hash(proofBytes)
+	proofHash := hash(proofBytes)
 	clientSig, err := clientPrivKey.Sign(proofHash)
 	if err != nil {
-		fmt.Println("Error", err)
+		fmt.Println(err)
 		return
 	}
 	clientSigString := hex.EncodeToString(clientSig)
 	proof.Signature = &clientSigString
 
-	// t_sig, _ := hex.DecodeString(clientSigString)
-	// t_pk, _ := crypto.NewPublicKey(clientPrivKey.PublicKey().RawString())
-	// t_msg, _ := hex.DecodeString(hex.EncodeToString(proofHash))
-	// fmt.Println(t_sig, t_pk, t_msg)
-	// if ok := t_pk.VerifyBytes(t_msg, t_sig); !ok {
-	// 	fmt.Println("FAILED")
-	// } else {
-	// 	fmt.Println("OK")
-	// }
-
-	// if ok := clientPrivKey.PublicKey().VerifyBytes(proofHash, clientSig); !ok {
-	// 	fmt.Println("FAILED")
-	// } else {
-	// 	fmt.Println("OK")
-	// }
-
-
 	// Prepare relay request.
-	body := spec.PostClientRelayJSONRequestBody {
-		Meta: &meta,
+	body := spec.PostClientRelayJSONRequestBody{
+		Meta:    &meta,
 		Payload: &payload,
-		Proof: &proof,
+		Proof:   &proof,
 	}
 
 	// Do relay.
-	res, err := client.PostClientRelayWithResponse(clientCtx, body)
+	res, err := rpcCtx.Client.PostClientRelayWithResponse(rpcCtx.Context, body)
 	if err != nil {
-		fmt.Println("PostClientRelayWithResponse Error: ", err.Error())
+		fmt.Println("PostClientRelayWithResponse error: ", err.Error())
 		return
 	}
 
-	if res.StatusCode() == 400 {
-		if res.JSON400.Dispatch != nil {
-			globalSessionBlockHeight = *res.JSON400.Dispatch.Session.Header.SessionHeight
+	switch res.StatusCode() {
+	case 200:
+		{
+			fmt.Println(string(res.Body))
 		}
-		// res, _ := json.MarshalIndent(res.JSON400, " ", "")
-		// fmt.Println("Error 400: ", string(res))
-		// fmt.Println(res.JSON400.Dispatch.BlockHeight, )
-		return
+	case 400:
+		{
+			if res.JSON400.Error != nil {
+				fmt.Println("Error sending relay: ", *res.JSON400.Error.Message)
+			}
+			// Other errors could potentially happen but we're only accounting
+			// for incorrect session block height for now.
+			if res.JSON400.Dispatch != nil {
+				rpcCtx.SessionBlockHeight = *res.JSON400.Dispatch.Session.Header.SessionHeight
+				fmt.Println("The session block height has been updated. Please try re-sending the relay.")
+			}
+			return
+		}
+	default:
+		fmt.Println("Unexpected status code: ", res.StatusCode())
 	}
-
-	if res.StatusCode() == 200 {
-		fmt.Println("200", *res.JSON200.Signature, res.JSON200.Payload, string(res.Body))
-	}
-	// fmt.Println(res)
-	// return res
-	// if res.StatusCode != 200 {
-	// 	res400, _ := json.Unmarshal(*res.JSON400)
-	// 	fmt.Println(res400)
-	// }
 }
 
-func getBlockchainServiceNode(blockchain string, client *spec.ClientWithResponses, clientCtx context.Context) (val spec.Node) {
-	body := spec.PostQueryNodesJSONRequestBody {
-		Blockchain: &blockchain,
+func getServiceNode(address string, rpcCtx *RpcContext) (val *spec.Node) {
+	body := spec.PostQueryNodeJSONRequestBody{
+		Address: &address,
 	}
-	res, err := client.PostQueryNodesWithResponse(clientCtx, body)
+	res, err := rpcCtx.Client.PostQueryNodeWithResponse(rpcCtx.Context, body)
 	if err != nil {
-		fmt.Println("Error: ", err)
+		fmt.Println(err)
+		val = nil
 		return
 	}
-	serviceNodes := *res.JSON200.Result
-	if len(serviceNodes) == 0 {
-		fmt.Println("Error: No service nodes found for blockchain: ", blockchain)
-		return
-	}
-	val = serviceNodes[0]
+	val = res.JSON200
 	return
 }
 
-// func getSessionBlockHeight(blockchain string, client *spec.ClientWithResponses, clientCtx context.Context) (val int64) {
-// 	body := spec.PostQuerySessionBlockHeightJSONRequestBody {
-// 	}
-// 	client.PostSessionBlockHeightWithResponse(clientCtx, blockchain)
-// }
+func hash(b []byte) []byte {
+	hasher := Hasher.New()
+	hasher.Write(b) //nolint:golint,errcheck
+	return hasher.Sum(nil)
+}

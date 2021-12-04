@@ -2,18 +2,18 @@ openapi: 3.0.3
 info:
   title: Pocket Network
   description: This is the API definition Pocket Network core RPC calls. Pocket is a distributed network that relays data requests and responses to and from any blockchain system. Pocket verifies all relayed data and proportionally rewards the participating nodes with native cryptographic tokens.
-  termsOfService: 'https://pokt.network/terms/'
+  termsOfService: "https://pokt.network/terms/"
   contact:
     email: hola@pokt.network
   license:
     name: MIT License
-    url: 'https://github.com/pokt-network/pocket-core/LICENSE.md'
+    url: "https://github.com/pokt-network/pocket-core/LICENSE.md"
   version: 0.6.0
 externalDocs:
   description: Find out more about Pocket Network
-  url: 'https://pokt.network'
+  url: "https://pokt.network"
 servers:
-  - url: 'http://localhost:8081/v1'
+  - url: "http://localhost:8081/v1"
 tags:
   - name: version
     description: Version of the Pocket API
@@ -28,7 +28,7 @@ paths:
         - version
       summary: Get the current version of the Pocket Network API
       responses:
-        '200':
+        "200":
           description: Version
           content:
             text/plain:
@@ -45,68 +45,68 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryDispatchRequest'
+              $ref: "#/components/schemas/QueryDispatchRequest"
       responses:
-        '200':
+        "200":
           description: A list of dispatch/service nodes
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryDispatchResponse'
+                $ref: "#/components/schemas/QueryDispatchResponse"
               example:
                 block_height: 1
                 session:
                   header:
                     app_public_key: f6f1f166536c55d3ad7b1b2629f0bce8a0a3dbd455d576ccb235419bcbfed7fd
-                    chain: '0001'
+                    chain: "0001"
                     session_height: 1
                   key: pY2rZUEkygFRUZ21iT0XiyQDkifIQC74IkoQN2YvisU=
                   nodes:
                     - address: ebea4171cee8eff0f388e1ed97c83a73022228d0
                       chains:
-                        - '0001'
+                        - "0001"
                       jailed: false
                       public_key: b31b52daa582838b72d71628814e8523d5b9ea08bb0b49a438693eb5269b4635
                       service_url: https://foo.bar:8080
                       status: 2
-                      tokens: '10000000'
-                      unstaking_time: '0001-01-01T00:00:00Z'
+                      tokens: "10000000"
+                      unstaking_time: "0001-01-01T00:00:00Z"
                     - address: 8de67229b1232b2bb77dc2c3ab247a62f47968d3
                       chains:
-                        - '0001'
+                        - "0001"
                       jailed: false
                       public_key: 993366e5b648b1e9f544daab0652b8fc9b3657eb9a0ee54afc53852d66b1c2d5
                       service_url: https://foo.bar:8080
                       status: 2
-                      tokens: '10000000'
-                      unstaking_time: '0001-01-01T00:00:00Z'
+                      tokens: "10000000"
+                      unstaking_time: "0001-01-01T00:00:00Z"
                     - address: fefe600f9b257e96633245731eff6c34efbb9a50
                       chains:
-                        - '0001'
+                        - "0001"
                       jailed: false
                       public_key: f6f1f166536c55d3ad7b1b2629f0bce8a0a3dbd455d576ccb235419bcbfed7fd
                       service_url: https://foo.bar:8080
                       status: 2
-                      tokens: '10000000'
-                      unstaking_time: '0001-01-01T00:00:00Z'
+                      tokens: "10000000"
+                      unstaking_time: "0001-01-01T00:00:00Z"
                     - address: fe6bff490b6dc4b2435c5c9d4960f2e79c792b1d
                       chains:
-                        - '0001'
+                        - "0001"
                       jailed: false
                       public_key: 5527f0f7f3d16bcec4e268a5fa8a9745f60e1497ea6745e58e2d985f2ac03875
                       service_url: https://foo.bar:8080
                       status: 2
-                      tokens: '1000000000000000000'
-                      unstaking_time: '0001-01-01T00:00:00Z'
+                      tokens: "1000000000000000000"
+                      unstaking_time: "0001-01-01T00:00:00Z"
                     - address: b97de5e4da9bb3978b4afb76abef9e04e6b86605
                       chains:
-                        - '0001'
+                        - "0001"
                       jailed: false
                       public_key: f11ab260c80cc835d5258c51f6aad69008bba1fd484f8c55d21e8bc85f737a21
                       service_url: https://foo.bar:8080
                       status: 2
-                      tokens: '10000000'
-                      unstaking_time: '0001-01-01T00:00:00Z'
+                      tokens: "10000000"
+                      unstaking_time: "0001-01-01T00:00:00Z"
   /client/relay:
     post:
       tags:
@@ -117,12 +117,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryRelayRequest'
+              $ref: "#/components/schemas/QueryRelayRequest"
             example:
               payload:
                 data: '"jsonrpc":"2.0","method":"web3_sha3","params":["0x68656c6c6f20776f726c64"],"id":64'
-                method: ''
-                path: ''
+                method: ""
+                path: ""
               meta:
                 block_height: 5
               proof:
@@ -138,12 +138,12 @@ paths:
                   signature: c5923bd5a663d7bb3c990504a98008e4d32ab7c57a8689d9a494fa29274b497396cbffa9523a7acf8cdff8227b96a8bb3e2e1c1b008de32041aa86c68d0f2b08
                 signature: e3e3a18fee96d25d913d2c62fc32febe58400cda17958916047945252a72adf96a92557774ba051c87a9c03e554136ef23b0de1bec167050e5be099bac52590d
       responses:
-        '200':
+        "200":
           description: Response from the relayed request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryRelayResponse'
+                $ref: "#/components/schemas/QueryRelayResponse"
               example:
                 Proof:
                   aat:
@@ -153,18 +153,18 @@ paths:
                     version: 0.0.1
                   blockchain: 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                   entropy: 0
-                  request_hash: ''
+                  request_hash: ""
                   servicer_pub_key: 5ad4a47a843151e18099c9752c23f392e7e918af88ed28fa8ca2b31a6c2a7a1e
                   session_block_height: 1
-                  signature: ''
-                payload: '0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad'
+                  signature: ""
+                payload: "0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad"
                 signature: e7c347971c0a53f9d63fb5681e35a4c89d97e7c6703c0e3980c2a70dbc56cb0db11e24eb078a9ffbaf7f78970ff0ce2478d7485301e39c5950c45028283ef709
-        '400':
+        "400":
           description: Error response from the relay request (Dispatch Is Optional)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryErrorRelayResponse'
+                $ref: "#/components/schemas/QueryErrorRelayResponse"
               example:
                 error: '{code: 400, message: "encoding/hex: odd length hex string" }'
                 dispatch:
@@ -181,46 +181,46 @@ paths:
                           - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                         jailed: false
                         public_key: a01bc947f512a971131474986cc0c8cb3caed6bcfca076e6b78ac2b838ebefed
-                        service_url: '0.0.0.0:8081'
+                        service_url: "0.0.0.0:8081"
                         status: 2
-                        tokens: '1000000000000000000'
-                        unstaking_time: '0001-01-01T00:00:00Z'
+                        tokens: "1000000000000000000"
+                        unstaking_time: "0001-01-01T00:00:00Z"
                       - address: 88967bf78114d5ea56e1a02fb3fd2cac3607d674
                         chains:
                           - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                         jailed: false
                         public_key: c61954ba119bbbb2c1efa1d44f5f4001438566fd8aee2892387ef55ded82c159
-                        service_url: '0.0.0.0:8081'
+                        service_url: "0.0.0.0:8081"
                         status: 2
-                        tokens: '10000000'
-                        unstaking_time: '0001-01-01T00:00:00Z'
+                        tokens: "10000000"
+                        unstaking_time: "0001-01-01T00:00:00Z"
                       - address: a0c005c63f97a13e540e6bb484821d77f3fdaf75
                         chains:
                           - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                         jailed: false
                         public_key: db07958aa0035fbb3e7e2575fbbb062a7d5ef5580cd0fe80142a4df5d31a316a
-                        service_url: '0.0.0.0:8081'
+                        service_url: "0.0.0.0:8081"
                         status: 2
-                        tokens: '10000000'
-                        unstaking_time: '0001-01-01T00:00:00Z'
+                        tokens: "10000000"
+                        unstaking_time: "0001-01-01T00:00:00Z"
                       - address: e3b15b922be9cabbe3b4a3a788dec8dc95c8f3dc
                         chains:
                           - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                         jailed: false
                         public_key: a9c5d4463d5e233dd9437a2044a6595fe69ced34716a8e1c8ad86d3196f3fd78
-                        service_url: '0.0.0.0:8081'
+                        service_url: "0.0.0.0:8081"
                         status: 2
-                        tokens: '10000000'
-                        unstaking_time: '0001-01-01T00:00:00Z'
+                        tokens: "10000000"
+                        unstaking_time: "0001-01-01T00:00:00Z"
                       - address: fa11cff20c510fa1588915bd48391fee802822c8
                         chains:
                           - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                         jailed: false
                         public_key: b62798f50be7055073f8b2f19ca4b2262a2c82f2ab16fc907e9db1cce551ffce
-                        service_url: '0.0.0.0:8081'
+                        service_url: "0.0.0.0:8081"
                         status: 2
-                        tokens: '10000000'
-                        unstaking_time: '0001-01-01T00:00:00Z'
+                        tokens: "10000000"
+                        unstaking_time: "0001-01-01T00:00:00Z"
 
   /client/sim:
     post:
@@ -232,20 +232,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySimRequest'
+              $ref: "#/components/schemas/QuerySimRequest"
             example:
               payload:
                 data: '"jsonrpc":"2.0","method":"web3_sha3","params":["0x68656c6c6f20776f726c64"],"id":64'
-                method: 'POST'
-                path: ''
-              relay_network_id: '0021'
+                method: "POST"
+                path: ""
+              relay_network_id: "0021"
       responses:
-        '200':
+        "200":
           description: Response from the relayed request
           content:
             application/json:
-              example:
-                '0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad'
+              example: "0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad"
   /client/rawtx:
     post:
       tags:
@@ -256,22 +255,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryRawTXRequest'
+              $ref: "#/components/schemas/QueryRawTXRequest"
       responses:
-        '200':
+        "200":
           description: Response from the relayed raw request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryRawTXResponse'
+                $ref: "#/components/schemas/QueryRawTXResponse"
               example:
-                height: '0'
+                height: "0"
                 txhash: 5F7D1B8AA14025F6F5E50B35CE7BC7BD6F7153FCF4840138E3CB6C1E5B5C7E78
                 raw_log: '[{"msg_index":0,"success":true,"log":"","events":[{"type":"message","attributes":[{"key":"action","value":"send"}]}]}]'
                 logs:
                   - msg_index: 0
                     success: true
-                    log: ''
+                    log: ""
                     events:
                       - type: message
                         attributes:
@@ -287,36 +286,36 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryChallengeRequest'
+              $ref: "#/components/schemas/QueryChallengeRequest"
       responses:
-        '200':
+        "200":
           description: Returns Challenge Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryChallengeResponse'
+                $ref: "#/components/schemas/QueryChallengeResponse"
   /query/account:
     post:
       tags:
         - query
       requestBody:
-        description: 'Request account at the specified height,  height = 0 is used as latest'
+        description: "Request account at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryAddressHeight'
+              $ref: "#/components/schemas/QueryAddressHeight"
             example:
               address: 4920ce1d787c60e2eaeff366c79e8aa2b82525f1
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Returns account at the specified height
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
-        '400':
+                $ref: "#/components/schemas/Account"
+        "400":
           description: Failed to retrieve the account
   /query/accounttxs:
     post:
@@ -327,64 +326,64 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryAccountTXs'
+              $ref: "#/components/schemas/QueryAccountTXs"
             example:
-              address: '197e4d46009879f28f978a90627c7dfeab64b4777afcc24e2b9c3d72b4dada22'
+              address: "197e4d46009879f28f978a90627c7dfeab64b4777afcc24e2b9c3d72b4dada22"
               height: 99
               page: 1
               per_page: 1000
               sort: "desc"
         required: true
       responses:
-        '200':
+        "200":
           description: Transaction list
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryAccountTXsResponse'
-        '400':
+                $ref: "#/components/schemas/QueryAccountTXsResponse"
+        "400":
           description: Failed to retrieve the transaction information
   /query/allParams:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the parameters at the specified height,  height = 0 is used as latest'
+        description: "Returns the parameters at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AllParams'
+                $ref: "#/components/schemas/AllParams"
               example:
                 app_params:
                   - param_key: application/ParticipationRateOn
-                    param_value: 'false'
+                    param_value: "false"
                   - param_key: application/StabilityAdjustment
-                    param_value: '0'
+                    param_value: "0"
                   - param_key: application/ApplicationStakeMinimum
-                    param_value: '1000000'
+                    param_value: "1000000"
                   - param_key: application/AppUnstakingTime
-                    param_value: '1814400000000000'
+                    param_value: "1814400000000000"
                   - param_key: application/BaseRelaysPerPOKT
-                    param_value: '100'
+                    param_value: "100"
                   - param_key: application/MaxApplications
-                    param_value: '9223372036854775807'
+                    param_value: "9223372036854775807"
                   - param_key: application/MaximumChains
-                    param_value: '15'
+                    param_value: "15"
                 auth_params:
                   - param_key: auth/TxSigLimit
-                    param_value: '7'
+                    param_value: "7"
                   - param_key: auth/MaxMemoCharacters
-                    param_value: '256'
+                    param_value: "256"
                   - param_key: auth/FeeMultipliers
                     param_value: '{"fee_multiplier":null,"default":"1"}'
                 gov_params:
@@ -396,74 +395,74 @@ paths:
                     param_value: '{"type":"gov/upgrade","value":{"Height":"10000","Version":"2.0.0"}}'
                 node_params:
                   - param_key: pos/DowntimeJailDuration
-                    param_value: '600000000000'
+                    param_value: "600000000000"
                   - param_key: pos/MinSignedPerWindow
-                    param_value: '0.500000000000000000'
+                    param_value: "0.500000000000000000"
                   - param_key: pos/StakeMinimum
-                    param_value: '1000000'
+                    param_value: "1000000"
                   - param_key: pos/MaximumChains
-                    param_value: '15'
+                    param_value: "15"
                   - param_key: pos/SignedBlocksWindow
-                    param_value: '100'
+                    param_value: "100"
                   - param_key: pos/DAOAllocation
-                    param_value: '10'
+                    param_value: "10"
                   - param_key: pos/MaxValidators
-                    param_value: '5000'
+                    param_value: "5000"
                   - param_key: pos/BlocksPerSession
-                    param_value: '25'
+                    param_value: "25"
                   - param_key: pos/ProposerPercentage
-                    param_value: '1'
+                    param_value: "1"
                   - param_key: pos/RelaysToTokensMultiplier
-                    param_value: '1000'
+                    param_value: "1000"
                   - param_key: pos/SlashFractionDoubleSign
-                    param_value: '0.050000000000000000'
+                    param_value: "0.050000000000000000"
                   - param_key: pos/SlashFractionDowntime
-                    param_value: '0.010000000000000000'
+                    param_value: "0.010000000000000000"
                   - param_key: pos/StakeDenom
                     param_value: upokt
                   - param_key: pos/UnstakingTime
-                    param_value: '1814400000000000'
+                    param_value: "1814400000000000"
                   - param_key: pos/MaxEvidenceAge
-                    param_value: '120000000000'
+                    param_value: "120000000000"
                   - param_key: pos/MaxJailedBlocks
-                    param_value: '1000'
+                    param_value: "1000"
                 pocket_params:
                   - param_key: pocketcore/SupportedBlockchains
                     param_value: '["0001"]'
                   - param_key: pocketcore/ClaimExpiration
-                    param_value: '100'
+                    param_value: "100"
                   - param_key: pocketcore/MinimumNumberOfProofs
-                    param_value: '5'
+                    param_value: "5"
                   - param_key: pocketcore/SessionNodeCount
-                    param_value: '5'
+                    param_value: "5"
                   - param_key: pocketcore/ClaimSubmissionWindow
-                    param_value: '3'
+                    param_value: "3"
                   - param_key: pocketcore/ReplayAttackBurnMultiplier
-                    param_value: '3'
-        '400':
+                    param_value: "3"
+        "400":
           description: Failed to retrieve the node information
   /query/app:
     post:
       tags:
         - query
       requestBody:
-        description: 'Rquest the app at the specified height,  height = 0 is used as latest'
+        description: "Rquest the app at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryAddressHeight'
+              $ref: "#/components/schemas/QueryAddressHeight"
             example:
               address: 4920ce1d787c60e2eaeff366c79e8aa2b82525f1
               height: 2
         required: true
       responses:
-        '200':
-          description: 'Returns the app at the specified height,  height = 0 is used as latest'
+        "200":
+          description: "Returns the app at the specified height,  height = 0 is used as latest"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Application'
-        '400':
+                $ref: "#/components/schemas/Application"
+        "400":
           description: Failed to retrieve the applications
   /query/apps:
     post:
@@ -474,7 +473,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeightAndApplicationsOpts'
+              $ref: "#/components/schemas/QueryHeightAndApplicationsOpts"
             example:
               height: 2
               opts:
@@ -483,59 +482,59 @@ paths:
                 per_page: 100
         required: true
       responses:
-        '200':
+        "200":
           description: Returns the list of all applications known at the specified height and staking status
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryAppsResponse'
-        '400':
+                $ref: "#/components/schemas/QueryAppsResponse"
+        "400":
           description: Failed to retrieve the applications
   /query/balance:
     post:
       tags:
         - query
       requestBody:
-        description: 'Request the balance of the specified address at the specified height,  height = 0 is used as latest'
+        description: "Request the balance of the specified address at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryAddressHeight'
+              $ref: "#/components/schemas/QueryAddressHeight"
             example:
               address: 1b1973906ee85993e994422eddeab89f385a00a4
               height: 2
         required: true
       responses:
-        '200':
-          description: 'Returns the balance of the specified address at the specified height,  height = 0 is used as latest'
+        "200":
+          description: "Returns the balance of the specified address at the specified height,  height = 0 is used as latest"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryBalanceResponse'
+                $ref: "#/components/schemas/QueryBalanceResponse"
               example:
                 balance: 1000000000
-        '400':
+        "400":
           description: Failed to retrieve Information
   /query/block:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the block structure at the specified height,  height = 0 is used as latest'
+        description: "Returns the block structure at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryBlock'
+              $ref: "#/components/schemas/QueryBlock"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Block data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryBlockResponse'
+                $ref: "#/components/schemas/QueryBlockResponse"
               example:
                 block:
                   data:
@@ -543,65 +542,65 @@ paths:
                   evidence:
                     evidence: null
                   header:
-                    app_hash: ''
+                    app_hash: ""
                     chain_id: pocket-test
                     consensus_hash: 90B6C64F69FDCF9746F038BD2D27DFFFAE814E19EA6F974C740896AA62EDDA1D
-                    data_hash: ''
-                    evidence_hash: ''
-                    height: '1'
+                    data_hash: ""
+                    evidence_hash: ""
+                    height: "1"
                     last_block_id:
-                      hash: ''
+                      hash: ""
                       parts:
-                        hash: ''
-                        total: '0'
-                    last_commit_hash: ''
-                    last_results_hash: ''
+                        hash: ""
+                        total: "0"
+                    last_commit_hash: ""
+                    last_results_hash: ""
                     next_validators_hash: AC2B8D79A789E27A51E809BED90DCA8EA0E640CA134F9ADDD1B4510E8CE8C1C0
-                    num_txs: '0'
+                    num_txs: "0"
                     proposer_address: AD8EAF52981A102068AA1FE4108E5520542078C3
-                    time: '2020-03-10T00:04:35.159615Z'
-                    total_txs: '0'
+                    time: "2020-03-10T00:04:35.159615Z"
+                    total_txs: "0"
                     validators_hash: AC2B8D79A789E27A51E809BED90DCA8EA0E640CA134F9ADDD1B4510E8CE8C1C0
                     version:
-                      app: '0'
-                      block: '10'
+                      app: "0"
+                      block: "10"
                   last_commit:
                     block_id:
-                      hash: ''
+                      hash: ""
                       parts:
-                        hash: ''
-                        total: '0'
+                        hash: ""
+                        total: "0"
                     precommits: null
                 block_meta:
                   block_id:
                     hash: D0A2AB1DE2FB356AEBF4CD9B18EA6E6754323512196858557787358C279E0473
                     parts:
                       hash: 581F3CCD645EB60EC4F16575F1C73393C9405C76E42C6C5D14938875FE4912F5
-                      total: '1'
+                      total: "1"
                   header:
-                    app_hash: ''
+                    app_hash: ""
                     chain_id: pocket-test
                     consensus_hash: 90B6C64F69FDCF9746F038BD2D27DFFFAE814E19EA6F974C740896AA62EDDA1D
-                    data_hash: ''
-                    evidence_hash: ''
-                    height: '1'
+                    data_hash: ""
+                    evidence_hash: ""
+                    height: "1"
                     last_block_id:
-                      hash: ''
+                      hash: ""
                       parts:
-                        hash: ''
-                        total: '0'
-                    last_commit_hash: ''
-                    last_results_hash: ''
+                        hash: ""
+                        total: "0"
+                    last_commit_hash: ""
+                    last_results_hash: ""
                     next_validators_hash: AC2B8D79A789E27A51E809BED90DCA8EA0E640CA134F9ADDD1B4510E8CE8C1C0
-                    num_txs: '0'
+                    num_txs: "0"
                     proposer_address: AD8EAF52981A102068AA1FE4108E5520542078C3
-                    time: '2020-03-10T00:04:35.159615Z'
-                    total_txs: '0'
+                    time: "2020-03-10T00:04:35.159615Z"
+                    total_txs: "0"
                     validators_hash: AC2B8D79A789E27A51E809BED90DCA8EA0E640CA134F9ADDD1B4510E8CE8C1C0
                     version:
-                      app: '0'
-                      block: '10'
-        '400':
+                      app: "0"
+                      block: "10"
+        "400":
           description: Failed to retrieve the block information
   /query/blocktxs:
     post:
@@ -612,7 +611,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryBlockTXs'
+              $ref: "#/components/schemas/QueryBlockTXs"
             example:
               height: 99
               page: 1
@@ -620,13 +619,13 @@ paths:
               sort: "desc"
         required: true
       responses:
-        '200':
+        "200":
           description: Transaction list
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryBlockTXsResponse'
-        '400':
+                $ref: "#/components/schemas/QueryBlockTXsResponse"
+        "400":
           description: Failed to retrieve the transaction information
   /query/height:
     post:
@@ -639,41 +638,41 @@ paths:
             schema: {}
         required: false
       responses:
-        '200':
+        "200":
           description: Block height
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryHeightResponse'
+                $ref: "#/components/schemas/QueryHeightResponse"
               example:
                 height: 10
-        '400':
+        "400":
           description: Failed to retrieve the block height information
   /query/param:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the parameters at the specified height,  height = 0 is used as latest'
+        description: "Returns the parameters at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeightAndKey'
+              $ref: "#/components/schemas/QueryHeightAndKey"
             example:
               height: 2
-              key: 'application/ParticipationRateOn'
+              key: "application/ParticipationRateOn"
         required: true
       responses:
-        '200':
+        "200":
           description: Parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SingleParam'
+                $ref: "#/components/schemas/SingleParam"
               example:
                 param_key: application/ParticipationRateOn
-                param_value: 'false'
-        '400':
+                param_value: "false"
+        "400":
           description: Failed to retrieve the node information
   /query/nodeclaim:
     post:
@@ -684,15 +683,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryNodeReceipt'
+              $ref: "#/components/schemas/QueryNodeReceipt"
         required: true
       responses:
-        '200':
+        "200":
           description: Node claim
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoredReceipt'
+                $ref: "#/components/schemas/StoredReceipt"
   /query/nodeclaims:
     post:
       tags:
@@ -702,88 +701,88 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryPaginatedHeightAndAddrParams'
+              $ref: "#/components/schemas/QueryPaginatedHeightAndAddrParams"
             example:
-              address: '0xA5DE6D4184016708c1040c355F1c958192276DB5'
+              address: "0xA5DE6D4184016708c1040c355F1c958192276DB5"
               height: 2
               page: 1
               per_page: 1
         required: true
       responses:
-        '200':
+        "200":
           description: Node claims
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryNodeClaimsResponse'
-        '400':
+                $ref: "#/components/schemas/QueryNodeClaimsResponse"
+        "400":
           description: Failed to retrieve the node proof information
   /query/signinginfo:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the list of the Tendermint Validator signing information for nodes. No address = all signing infos in the state'
+        description: "Returns the list of the Tendermint Validator signing information for nodes. No address = all signing infos in the state"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryPaginatedHeightAndAddrParams'
+              $ref: "#/components/schemas/QueryPaginatedHeightAndAddrParams"
             example:
-              address: '0xA5DE6D4184016708c1040c355F1c958192276DB5'
+              address: "0xA5DE6D4184016708c1040c355F1c958192276DB5"
               height: 2
               page: 1
               per_page: 1
         required: true
       responses:
-        '200':
+        "200":
           description: Signing Info
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuerySigningInfoResponse'
+                $ref: "#/components/schemas/QuerySigningInfoResponse"
   /query/node:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the node at the specified height,  height = 0 is used as latest'
+        description: "Returns the node at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryAddressHeight'
+              $ref: "#/components/schemas/QueryAddressHeight"
             example:
-              address: '0xA5DE6D4184016708c1040c355F1c958192276DB5'
+              address: "0xA5DE6D4184016708c1040c355F1c958192276DB5"
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Node details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Node'
+                $ref: "#/components/schemas/Node"
               example:
                 address: 05d98fbedf63cd4b4e337ef488ec2ad7e5072cb2
                 chains:
                   - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
                 jailed: false
                 public_key: bac2790f5786d4e016ed1f03a54205ba99b949e6a3c4b4641317977dfedfce79
-                service_url: '0.0.0.0:8081'
+                service_url: "0.0.0.0:8081"
                 status: 2
-                tokens: '1000000000000000'
-                unstaking_time: '0001-01-01T00:00:00Z'
-        '400':
+                tokens: "1000000000000000"
+                unstaking_time: "0001-01-01T00:00:00Z"
+        "400":
           description: Failed to retrieve the node information
   /query/nodes:
     post:
       tags:
         - query
       requestBody:
-        description: 'Request a page of nodes known at the specified height and with options, empty options returns all validators, page < 1 returns the first page, per_page < 1 returns 10000 elements per page'
+        description: "Request a page of nodes known at the specified height and with options, empty options returns all validators, page < 1 returns the first page, per_page < 1 returns 10000 elements per page"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeightAndValidatorsOpts'
+              $ref: "#/components/schemas/QueryHeightAndValidatorsOpts"
             example:
               opts:
                 staking_status: 0x02
@@ -794,70 +793,70 @@ paths:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Returns the list of all nodes known at the specified height and staking status
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryNodesResponse'
+                $ref: "#/components/schemas/QueryNodesResponse"
               example:
                 result:
                   - address: 98a18a38aa6826a55dccce19f607e3171cf1436e
                     public_key: d6b3785f00961059d2a5c6448cae7ddb02475de79c22261687a92cb905ff0de9
                     jailed: false
                     status: 2
-                    tokens: '1000000000000000'
-                    service_url: '0.0.0.0:8081'
+                    tokens: "1000000000000000"
+                    service_url: "0.0.0.0:8081"
                     chains:
                       - 36f028580bb02cc8272a9a020f4200e346e276ae664e45ee80745574e2f5ab80
-                    unstaking_time: '0001-01-01T00:00:00Z'
+                    unstaking_time: "0001-01-01T00:00:00Z"
                 page: 1
                 total_pages: 100
-        '400':
+        "400":
           description: Failed to retrieve the nodes' information
   /query/supply:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the list of node params specified in the height,  height = 0 is used as latest'
+        description: "Returns the list of node params specified in the height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Pocket Network parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuerySupplyResponse'
-        '400':
+                $ref: "#/components/schemas/QuerySupplyResponse"
+        "400":
           description: Failed to retrieve the supply information
   /query/supportedchains:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns the list Network Identifiers supported by the network at the specified height,  height = 0 is used as latest'
+        description: "Returns the list Network Identifiers supported by the network at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Pocket Network parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuerySupportedChainsResponse'
-        '400':
+                $ref: "#/components/schemas/QuerySupportedChainsResponse"
+        "400":
           description: Failed to retrieve the application information
   /query/state:
     post:
@@ -868,51 +867,51 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
-              height: '2'
+              height: "2"
         required: true
       responses:
-        '200':
+        "200":
           description: Transaction data
           content:
             application/json:
               example:
-                app_hash: ''
+                app_hash: ""
                 app_state:
                   application:
-                    applications: [ ]
+                    applications: []
                     exported: true
                     params:
-                      app_stake_minimum: '1000000'
-                      base_relays_per_pokt: '167'
-                      max_applications: '9223372036854775807'
-                      maximum_chains: '15'
+                      app_stake_minimum: "1000000"
+                      base_relays_per_pokt: "167"
+                      max_applications: "9223372036854775807"
+                      maximum_chains: "15"
                       participation_rate_on: false
-                      stability_adjustment: '0'
-                      unstaking_time: '1814000000000000'
+                      stability_adjustment: "0"
+                      unstaking_time: "1814000000000000"
                   auth:
                     accounts:
                       - type: posmint/Account
                         value:
-                          address: '009c0b262c6150d7dca0304acc0abc59d8086b0d'
+                          address: "009c0b262c6150d7dca0304acc0abc59d8086b0d"
                           coins:
-                            - amount: '0'
+                            - amount: "0"
                               denom: upokt
                           public_key:
                             type: crypto/ed25519_public_key
                             value: 5760934260f6893935a568eae97de00b21dfe539f9aa3b7d1de9d8824352a8f5
                     params:
                       fee_multipliers:
-                        default: '1'
+                        default: "1"
                         fee_multiplier:
-                      max_memo_characters: '75'
-                      tx_sig_limit: '8'
+                      max_memo_characters: "75"
+                      tx_sig_limit: "8"
                     supply:
-                      - amount: '650000000150000'
+                      - amount: "650000000150000"
                         denom: upokt
                   gov:
-                    DAO_Tokens: '50000000000000'
+                    DAO_Tokens: "50000000000000"
                     params:
                       acl:
                         - acl_key: application/ApplicationStakeMinimum
@@ -987,158 +986,158 @@ paths:
                           address: a83172b67b5ffbfcb8acb95acc0fd0466a9d4bc4
                       dao_owner: a83172b67b5ffbfcb8acb95acc0fd0466a9d4bc4
                       upgrade:
-                        Height: '0'
-                        Version: '0'
+                        Height: "0"
+                        Version: "0"
                   pocketcore:
                     claims:
                     params:
-                      claim_expiration: '120'
-                      minimum_number_of_proofs: '10'
-                      proof_waiting_period: '3'
-                      replay_attack_burn_multiplier: '3'
-                      session_node_count: '5'
+                      claim_expiration: "120"
+                      minimum_number_of_proofs: "10"
+                      proof_waiting_period: "3"
+                      replay_attack_burn_multiplier: "3"
+                      session_node_count: "5"
                       supported_blockchains:
-                        - '0001'
-                        - '0021'
+                        - "0001"
+                        - "0021"
                   pos:
                     exported: true
-                    missed_blocks: { }
+                    missed_blocks: {}
                     params:
-                      dao_allocation: '10'
-                      downtime_jail_duration: '3600000000000'
-                      max_evidence_age: '120000000000'
-                      max_jailed_blocks: '37960'
-                      max_validators: '5000'
-                      maximum_chains: '15'
-                      min_signed_per_window: '6.000000000000000000'
-                      proposer_allocation: '1'
-                      relays_to_tokens_multiplier: '0'
-                      session_block_frequency: '4'
-                      signed_blocks_window: '10'
-                      slash_fraction_double_sign: '0.050000000000000000'
-                      slash_fraction_downtime: '0.000001000000000000'
+                      dao_allocation: "10"
+                      downtime_jail_duration: "3600000000000"
+                      max_evidence_age: "120000000000"
+                      max_jailed_blocks: "37960"
+                      max_validators: "5000"
+                      maximum_chains: "15"
+                      min_signed_per_window: "6.000000000000000000"
+                      proposer_allocation: "1"
+                      relays_to_tokens_multiplier: "0"
+                      session_block_frequency: "4"
+                      signed_blocks_window: "10"
+                      slash_fraction_double_sign: "0.050000000000000000"
+                      slash_fraction_downtime: "0.000001000000000000"
                       stake_denom: upokt
-                      stake_minimum: '15000000000'
-                      unstaking_time: '1814000000000000'
-                    prevState_total_power: '76084066'
+                      stake_minimum: "15000000000"
+                      unstaking_time: "1814000000000000"
+                    prevState_total_power: "76084066"
                     prevState_validator_powers:
                       - Address: 40c8973967b8d6b1123029819cad20fd44580e9e
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: 5bcae50364952a5fa3a8363f93f2adffc9eff42e
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: 8afc6b4195e3fd59fa3aa8bab65b2b7c497cedf9
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: 8dd722c42425783b50db707995f841b3c7ccc827
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: 913fed2298bc8af74989bc56d94e2e4ca95a6519
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: a8943929b30cbc3e7a30c2de06b385bcf874134b
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: c6dfe12a4ff2bc2b44c83c791853b6edb6c5eb58
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: d46556719200aee73fc7446731ae58496978548d
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: e09ce22e0abfd8129776128c0c9b3836024d8c6e
-                        Power: '7641951'
+                        Power: "7641951"
                       - Address: e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f
-                        Power: '7306507'
+                        Power: "7306507"
                     previous_proposer: 913fed2298bc8af74989bc56d94e2e4ca95a6519
                     signing_infos:
-                      '009c0b262c6150d7dca0304acc0abc59d8086b0d':
-                        address: '009c0b262c6150d7dca0304acc0abc59d8086b0d'
-                        index_offset: '0'
-                        jailed_blocks_counter: '2'
-                        jailed_until: '1970-01-01T00:00:00Z'
-                        missed_blocks_counter: '0'
-                        start_height: '0'
+                      "009c0b262c6150d7dca0304acc0abc59d8086b0d":
+                        address: "009c0b262c6150d7dca0304acc0abc59d8086b0d"
+                        index_offset: "0"
+                        jailed_blocks_counter: "2"
+                        jailed_until: "1970-01-01T00:00:00Z"
+                        missed_blocks_counter: "0"
+                        start_height: "0"
                       016b81f94f552ecdc1ab9da437ae06686fca3674:
                         address: 016b81f94f552ecdc1ab9da437ae06686fca3674
-                        index_offset: '0'
-                        jailed_blocks_counter: '2'
-                        jailed_until: '1970-01-01T00:00:00Z'
-                        missed_blocks_counter: '0'
-                        start_height: '0'
+                        index_offset: "0"
+                        jailed_blocks_counter: "2"
+                        jailed_until: "1970-01-01T00:00:00Z"
+                        missed_blocks_counter: "0"
+                        start_height: "0"
                       01f1f9010e52c71b567f4759700df164b6074b04:
                         address: 01f1f9010e52c71b567f4759700df164b6074b04
-                        index_offset: '0'
-                        jailed_blocks_counter: '2'
-                        jailed_until: '1970-01-01T00:00:00Z'
-                        missed_blocks_counter: '0'
-                        start_height: '0'
+                        index_offset: "0"
+                        jailed_blocks_counter: "2"
+                        jailed_until: "1970-01-01T00:00:00Z"
+                        missed_blocks_counter: "0"
+                        start_height: "0"
                     validators:
-                      - address: '009c0b262c6150d7dca0304acc0abc59d8086b0d'
+                      - address: "009c0b262c6150d7dca0304acc0abc59d8086b0d"
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 5760934260f6893935a568eae97de00b21dfe539f9aa3b7d1de9d8824352a8f5
                         service_url: https://1.pockettuzem.com:443
                         status: 2
-                        tokens: '17500000000'
-                        unstaking_time: '2020-11-10T00:00:00Z'
+                        tokens: "17500000000"
+                        unstaking_time: "2020-11-10T00:00:00Z"
                       - address: 016b81f94f552ecdc1ab9da437ae06686fca3674
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 4c51be986b3b81b00935a10fabcfcf78bc7068885e89f0ede96cfa3d98262ce7
                         service_url: https://pocketnode2.lamref.cf:443
                         status: 2
-                        tokens: '17500000000'
-                        unstaking_time: '2020-11-10T00:00:00Z'
+                        tokens: "17500000000"
+                        unstaking_time: "2020-11-10T00:00:00Z"
                       - address: 01f1f9010e52c71b567f4759700df164b6074b04
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 9acb7cb34b06e9573471f65191e507909c7b0a49b5296463c1c5be8faf747c90
                         service_url: https://node2.protofire.io:443
                         status: 2
-                        tokens: '15005000000'
-                        unstaking_time: '2020-11-10T00:00:00Z'
+                        tokens: "15005000000"
+                        unstaking_time: "2020-11-10T00:00:00Z"
                       - address: 03655eabc3a7337daa303576aa9bbe726f2320c8
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 5ab705112162d3b19d57e967e2eac03491914abc6cb11a00275242e8874580c7
                         service_url: https://node2.musicabaile.com:443
                         status: 2
-                        tokens: '208219000000'
-                        unstaking_time: '2021-05-15T00:00:00Z'
-                      - address: '04493410acf1e28ce254c36de8187fa29a4917c0'
+                        tokens: "208219000000"
+                        unstaking_time: "2021-05-15T00:00:00Z"
+                      - address: "04493410acf1e28ce254c36de8187fa29a4917c0"
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 3a6ae53636b3ec5708fbc41ffe8ec2fd952d9b9d5ef9ee22a325486dd08a7306
                         service_url: https://node1.noderunnerpkt.xyz:443
                         status: 2
-                        tokens: '15723270000'
-                        unstaking_time: '2020-11-10T00:00:00Z'
+                        tokens: "15723270000"
+                        unstaking_time: "2020-11-10T00:00:00Z"
                       - address: fe2006c9b958937923b31868ed265f4fa061cf9a
                         chains:
-                          - '0001'
-                          - '0021'
+                          - "0001"
+                          - "0021"
                         jailed: true
                         public_key: 301c25510103bddbd9b213a1d54e52c8ba826ca066882efd831034bee586c1e8
                         service_url: https://nodo1.misnodos.company:443
                         status: 2
-                        tokens: '510000000000'
-                        unstaking_time: '2021-05-15T00:00:00Z'
+                        tokens: "510000000000"
+                        unstaking_time: "2021-05-15T00:00:00Z"
                 chain_id: "<Input New ChainID>"
                 consensus_params:
                   block:
-                    max_bytes: '4000000'
+                    max_bytes: "4000000"
                     max_gas: "-1"
-                    time_iota_ms: '1'
+                    time_iota_ms: "1"
                   evidence:
-                    max_age: '1000000'
+                    max_age: "1000000"
                   validator:
                     pub_key_types:
                       - ed25519
-                genesis_time: '0001-01-01T00:00:00Z'
-        '400':
+                genesis_time: "0001-01-01T00:00:00Z"
+        "400":
           description: Failed to retrieve the transaction information
   /query/tx:
     post:
@@ -1149,41 +1148,41 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryTX'
+              $ref: "#/components/schemas/QueryTX"
             example:
-              hash: '0x197e4d46009879f28f978a90627c7dfeab64b4777afcc24e2b9c3d72b4dada22'
+              hash: "0x197e4d46009879f28f978a90627c7dfeab64b4777afcc24e2b9c3d72b4dada22"
               prove: false
         required: true
       responses:
-        '200':
+        "200":
           description: Transaction data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryTXResponse'
-        '400':
+                $ref: "#/components/schemas/QueryTXResponse"
+        "400":
           description: Failed to retrieve the transaction information
   /query/upgrade:
     post:
       tags:
         - query
       requestBody:
-        description: 'Returns upgrade information specified height,  height = 0 is used as latest'
+        description: "Returns upgrade information specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Upgrade Response Information
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpgradeResponse'
-        '400':
+                $ref: "#/components/schemas/UpgradeResponse"
+        "400":
           description: Failed to retrieve the supply information
   /query/pocketparams:
     post:
@@ -1191,22 +1190,22 @@ paths:
       tags:
         - query
       requestBody:
-        description: 'Returns the pocket parameters at the specified height,  height = 0 is used as latest'
+        description: "Returns the pocket parameters at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Pocket Network parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PocketParams'
-        '400':
+                $ref: "#/components/schemas/PocketParams"
+        "400":
           description: Failed to retrieve the application information
   /query/nodeparams:
     post:
@@ -1214,22 +1213,22 @@ paths:
       tags:
         - query
       requestBody:
-        description: 'Returns the node parameters at the specified height,  height = 0 is used as latest'
+        description: "Returns the node parameters at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Node parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NodeParams'
-        '400':
+                $ref: "#/components/schemas/NodeParams"
+        "400":
           description: Failed to retrieve the node information
   /query/appparams:
     post:
@@ -1237,22 +1236,22 @@ paths:
       tags:
         - query
       requestBody:
-        description: 'Returns the app parameters at the specified height,  height = 0 is used as latest'
+        description: "Returns the app parameters at the specified height,  height = 0 is used as latest"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryHeight'
+              $ref: "#/components/schemas/QueryHeight"
             example:
               height: 2
         required: true
       responses:
-        '200':
+        "200":
           description: Application parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParams'
-        '400':
+                $ref: "#/components/schemas/ApplicationParams"
+        "400":
           description: Failed to retrieve the application information
   /private/stop:
     post:
@@ -1265,14 +1264,14 @@ paths:
             type: string
           description: Current Authorization Token from pocket core.
       responses:
-        '200':
+        "200":
           description: Succesfull Stop
           content:
             text/plain:
               schema:
                 type: string
                 example: ""
-        '401':
+        "401":
           description: Wrong Authtoken
           content:
             application/json:
@@ -1317,7 +1316,7 @@ components:
         events:
           type: array
           items:
-            $ref: '#/components/schemas/ABCIEvent'
+            $ref: "#/components/schemas/ABCIEvent"
     Account:
       type: object
       properties:
@@ -1326,7 +1325,7 @@ components:
         coins:
           type: array
           items:
-            $ref: '#/components/schemas/Coin'
+            $ref: "#/components/schemas/Coin"
         public_key:
           type: string
     Coin:
@@ -1366,7 +1365,7 @@ components:
           description: Maximum number of relays supported
         unstaking_time:
           type: string
-          description: 'If unstaking, the minimum time for the validator to complete unstaking'
+          description: "If unstaking, the minimum time for the validator to complete unstaking"
     ApplicationParams:
       type: object
       properties:
@@ -1395,12 +1394,12 @@ components:
     Applications:
       type: array
       items:
-        $ref: '#/components/schemas/Application'
+        $ref: "#/components/schemas/Application"
     Block:
       type: object
       properties:
         header:
-          $ref: '#/components/schemas/BlockHeader'
+          $ref: "#/components/schemas/BlockHeader"
         data:
           type: string
           description: Data hash of the block
@@ -1408,7 +1407,7 @@ components:
           type: string
           description: Evidence hash
         lastCommit:
-          $ref: '#/components/schemas/Commit'
+          $ref: "#/components/schemas/Commit"
     Blockchain:
       type: object
       properties:
@@ -1422,7 +1421,7 @@ components:
       type: object
       properties:
         version:
-          $ref: '#/components/schemas/Consensus'
+          $ref: "#/components/schemas/Consensus"
         chain_id:
           type: string
         height:
@@ -1437,7 +1436,7 @@ components:
           type: integer
           format: int64
         last_block_id:
-          $ref: '#/components/schemas/BlockID'
+          $ref: "#/components/schemas/BlockID"
         last_commit_hash:
           type: string
         data_hash:
@@ -1462,21 +1461,21 @@ components:
         hash:
           type: string
         parts:
-          $ref: '#/components/schemas/PartSetHeader'
+          $ref: "#/components/schemas/PartSetHeader"
     BlockMeta:
       type: object
       properties:
         block_id:
-          $ref: '#/components/schemas/BlockID'
+          $ref: "#/components/schemas/BlockID"
         blockHeader:
-          $ref: '#/components/schemas/BlockHeader'
+          $ref: "#/components/schemas/BlockHeader"
     Commit:
       type: object
       properties:
         block_id:
-          $ref: '#/components/schemas/BlockID'
+          $ref: "#/components/schemas/BlockID"
         commit_signature:
-          $ref: '#/components/schemas/CommitSignature'
+          $ref: "#/components/schemas/CommitSignature"
     CommitSignature:
       type: object
       properties:
@@ -1488,7 +1487,7 @@ components:
         round:
           type: integer
         block_id:
-          $ref: '#/components/schemas/BlockID'
+          $ref: "#/components/schemas/BlockID"
         timestamp:
           type: string
         validator_address:
@@ -1536,34 +1535,34 @@ components:
           description: How many tokens has this node staked in uPOKT
         unstaking_time:
           type: string
-          description: 'If unstaking, the minimum time for the validator to complete unstaking'
+          description: "If unstaking, the minimum time for the validator to complete unstaking"
     AllParams:
       type: object
       properties:
         app_params:
           type: array
           items:
-            $ref: '#/components/schemas/SingleParam'
+            $ref: "#/components/schemas/SingleParam"
             description: the APP module params
         node_params:
           type: array
           items:
-            $ref: '#/components/schemas/SingleParam'
+            $ref: "#/components/schemas/SingleParam"
             description: the POS module params
         pocket_params:
           type: array
           items:
-            $ref: '#/components/schemas/SingleParam'
+            $ref: "#/components/schemas/SingleParam"
             description: the Pocket params
         gov_params:
           type: array
           items:
-            $ref: '#/components/schemas/SingleParam'
+            $ref: "#/components/schemas/SingleParam"
             description: the GOV module params
         auth_params:
           type: array
           items:
-            $ref: '#/components/schemas/SingleParam'
+            $ref: "#/components/schemas/SingleParam"
             description: the Auth module params
     SingleParam:
       type: object
@@ -1674,7 +1673,7 @@ components:
           type: string
           description: Blockchain hex string
         aat:
-          $ref: '#/components/schemas/AAT'
+          $ref: "#/components/schemas/AAT"
         signature:
           type: string
           description: client's signature in hex
@@ -1717,7 +1716,7 @@ components:
           type: string
           description: The REST path
         headers:
-          $ref: '#/components/schemas/RelayHeader'
+          $ref: "#/components/schemas/RelayHeader"
     SessionHeader:
       type: object
       properties:
@@ -1750,7 +1749,7 @@ components:
       type: object
       properties:
         session_header:
-          $ref: '#/components/schemas/SessionHeader'
+          $ref: "#/components/schemas/SessionHeader"
         servicer_address:
           type: string
         total_relays:
@@ -1776,9 +1775,9 @@ components:
         total_proofs:
           type: integer
         session_header:
-          $ref: '#/components/schemas/SessionHeader'
+          $ref: "#/components/schemas/SessionHeader"
         merkle_root:
-          $ref: '#/components/schemas/HashSum'
+          $ref: "#/components/schemas/HashSum"
 
     SigningInfo:
       type: object
@@ -1830,21 +1829,21 @@ components:
           type: integer
           format: int64
         tx_result:
-          $ref: '#/components/schemas/TxResult'
+          $ref: "#/components/schemas/TxResult"
         tx:
           type: string
           description: Raw data of the transaction
         proof:
-          $ref: '#/components/schemas/TXProof'
+          $ref: "#/components/schemas/TXProof"
         stdTx:
-          $ref:  '#/components/schemas/StdTx'
+          $ref: "#/components/schemas/StdTx"
     StdTx:
       type: object
       properties:
         entropy:
           type: integer
         fee:
-          $ref: '#/components/schemas/Coin'
+          $ref: "#/components/schemas/Coin"
         memo:
           type: string
         msg:
@@ -1891,7 +1890,7 @@ components:
         data:
           type: string
         proof:
-          $ref: '#/components/schemas/SimpleProof'
+          $ref: "#/components/schemas/SimpleProof"
     QueryAddressHeight:
       type: object
       properties:
@@ -1916,16 +1915,16 @@ components:
       type: object
       properties:
         block:
-          $ref: '#/components/schemas/Block'
+          $ref: "#/components/schemas/Block"
         block_meta:
-          $ref: '#/components/schemas/BlockMeta'
+          $ref: "#/components/schemas/BlockMeta"
     QueryDispatchRequest:
-      $ref: '#/components/schemas/SessionHeader'
+      $ref: "#/components/schemas/SessionHeader"
     QueryDispatchResponse:
       type: object
       properties:
         session:
-          $ref: '#/components/schemas/Session'
+          $ref: "#/components/schemas/Session"
         block_height:
           type: integer
           format: int64
@@ -1933,14 +1932,14 @@ components:
       type: object
       properties:
         header:
-          $ref: '#/components/schemas/SessionHeader'
+          $ref: "#/components/schemas/SessionHeader"
         key:
           type: string
           format: byte
         nodes:
           type: array
           items:
-            $ref: '#/components/schemas/Node'
+            $ref: "#/components/schemas/Node"
     QueryHeightAndKey:
       type: object
       properties:
@@ -1986,7 +1985,7 @@ components:
         result:
           type: array
           items:
-            $ref: '#/components/schemas/StoredReceipt'
+            $ref: "#/components/schemas/StoredReceipt"
         page:
           type: integer
           format: int64
@@ -2001,7 +2000,7 @@ components:
         result:
           type: array
           items:
-            $ref: '#/components/schemas/MsgClaim'
+            $ref: "#/components/schemas/MsgClaim"
         page:
           type: integer
           format: int64
@@ -2016,7 +2015,7 @@ components:
         result:
           type: array
           items:
-            $ref: '#/components/schemas/SigningInfo'
+            $ref: "#/components/schemas/SigningInfo"
         page:
           type: integer
           format: int64
@@ -2031,7 +2030,7 @@ components:
         result:
           type: array
           items:
-            $ref: '#/components/schemas/Node'
+            $ref: "#/components/schemas/Node"
         page:
           type: integer
           format: int64
@@ -2046,7 +2045,7 @@ components:
         result:
           type: array
           items:
-            $ref: '#/components/schemas/Application'
+            $ref: "#/components/schemas/Application"
         page:
           type: integer
           format: int64
@@ -2087,7 +2086,7 @@ components:
         logs:
           type: array
           items:
-            $ref: '#/components/schemas/ABCIMessageLog'
+            $ref: "#/components/schemas/ABCIMessageLog"
           description: ABCI Tendermint Logs
         info:
           type: string
@@ -2106,22 +2105,22 @@ components:
       type: object
       properties:
         payload:
-          $ref: '#/components/schemas/RelayPayload'
+          $ref: "#/components/schemas/RelayPayload"
         meta:
-          $ref: '#/components/schemas/RelayMetadata'
+          $ref: "#/components/schemas/RelayMetadata"
         proof:
-          $ref: '#/components/schemas/RelayProof'
+          $ref: "#/components/schemas/RelayProof"
     QuerySimRequest:
       type: object
       properties:
         payload:
-          $ref: '#/components/schemas/RelayPayload'
+          $ref: "#/components/schemas/RelayPayload"
         relay_network_id:
           type: string
         meta:
-          $ref: '#/components/schemas/RelayMetadata'
+          $ref: "#/components/schemas/RelayMetadata"
         proof:
-          $ref: '#/components/schemas/RelayProof'
+          $ref: "#/components/schemas/RelayProof"
     QueryRelayResponse:
       type: object
       properties:
@@ -2138,18 +2137,18 @@ components:
           type: string
           description: Amino JSON Error String
         dispatch:
-          $ref: '#/components/schemas/QueryDispatchResponse'
+          $ref: "#/components/schemas/QueryDispatchResponse"
     QueryChallengeRequest:
       type: object
       properties:
         majority_responses:
           type: array
           items:
-            $ref: '#/components/schemas/QueryRelayResponse'
+            $ref: "#/components/schemas/QueryRelayResponse"
           minItems: 1
           maxItems: 2
         minority_response:
-          $ref: '#/components/schemas/QueryRelayResponse'
+          $ref: "#/components/schemas/QueryRelayResponse"
         address:
           description: reporter address
           type: string
@@ -2248,7 +2247,7 @@ components:
       type: object
       properties:
         transaction:
-          $ref: '#/components/schemas/Transaction'
+          $ref: "#/components/schemas/Transaction"
     QueryPaginatedHeightAndAddrParams:
       type: object
       properties:
@@ -2286,7 +2285,7 @@ components:
         txs:
           type: array
           items:
-            $ref: '#/components/schemas/Transaction'
+            $ref: "#/components/schemas/Transaction"
         total_count:
           type: string
     QueryBlockTXs:
@@ -2310,7 +2309,7 @@ components:
         txs:
           type: array
           items:
-            $ref: '#/components/schemas/Transaction'
+            $ref: "#/components/schemas/Transaction"
         total_count:
           type: integer
     UpgradeResponse:

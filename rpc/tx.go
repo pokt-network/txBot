@@ -29,9 +29,9 @@ import (
 	config "github.com/pokt-network/txbot/config"
 )
 
-var memCDC *codec.Codec
-
 const Fee int64 = int64(10000)
+
+var memCDC *codec.Codec
 
 func memCodec() *codec.Codec {
 	if memCDC == nil {
@@ -50,7 +50,7 @@ func memCodec() *codec.Codec {
 }
 
 func AppStakeTransaction(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgStake{
 		PubKey: pk,
@@ -65,7 +65,7 @@ func AppStakeTransaction(config config.Config) {
 }
 
 func AppUnstakeTransaction(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgBeginUnstake{
 		Address: types.Address(pk.Address()),
@@ -74,10 +74,11 @@ func AppUnstakeTransaction(config config.Config) {
 }
 
 func NodeSendTx(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 
-	signer2 := config.GetRandomPrivateKey()
+	// TODO: Is it okay for this to be the same as the signer above?
+	signer2 := config.GetRandomNodePrivateKey()
 	pk2 := signer2.PublicKey()
 
 	msg := nodesTypes.MsgSend{
@@ -89,7 +90,7 @@ func NodeSendTx(config config.Config) {
 }
 
 func NodeStakeTransaction(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgStake{
 		PublicKey:  pk,
@@ -105,7 +106,7 @@ func NodeStakeTransaction(config config.Config) {
 }
 
 func NodeUnstakeTransaction(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgBeginUnstake{
 		Address: types.Address(pk.Address()),
@@ -114,7 +115,7 @@ func NodeUnstakeTransaction(config config.Config) {
 }
 
 func NodeUnjailTransaction(config config.Config) {
-	signer := config.GetRandomPrivateKey()
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := nodesTypes.MsgUnjail{
 		ValidatorAddr: types.Address(pk.Address()),
@@ -217,7 +218,7 @@ func getLegacyCodec(c config.Config) bool {
 	} else if c.LegacyCodecMode == 1 {
 		return true
 	} else {
-		return 0 == rand.Intn(2)
+		return rand.Intn(2) == 0
 	}
 }
 
@@ -322,12 +323,12 @@ func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.Pri
 		return nil, err
 	}
 	s := authTypes.StdSignature{PublicKey: pk.PublicKey(), Signature: sig}
-	stdTx := authTypes.StdTx {
-		Msg: msg,
-		Fee: fees,
+	stdTx := authTypes.StdTx{
+		Msg:       msg,
+		Fee:       fees,
 		Signature: s,
-		Memo: memo,
-		Entropy: entropy,
+		Memo:      memo,
+		Entropy:   entropy,
 	}
 	if legacyCodec {
 		return auth.DefaultTxEncoder(cdc)(stdTx, 0)

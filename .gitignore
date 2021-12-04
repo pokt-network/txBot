@@ -1,6 +1,5 @@
 vendor/*
 .idea/*
 txbot
-lost_and_found.txt
 # *.gen.go
 # spec/rpc_spec.yaml
