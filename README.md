@@ -51,7 +51,7 @@ See the [config](config.json) for an example configuration that works with the `
 
 ## [TODO] Client Generation
 
-## TODO
+## Future Work (TODO)
 
 [ ] Migrate `tx.go` to use the RPC Client from `req.go`.
 [ ] Rename repo to something else since it makes both RPC requests and transactions.
@@ -61,3 +61,6 @@ See the [config](config.json) for an example configuration that works with the `
 [ ] Add support for other Harmony [JSON-RPC](https://docs.harmony.one/home/developers/api/methods) APIs.
 [ ] Consider adding request analytics similar to [PRLTS](https://github.com/pokt-network/prlts).
 [ ] Consider using an alternative [Go client generation](https://gist.github.com/craigmurray1120/8e87d88a076d49ec9c43636a313cfa66) or use the Go SDK to be build by PNF in 2022.
+[ ] Expand relay chains and functions for each chain.
+[ ] Consider having a simple react app as a UI to trigger these transactions or requests.
+[ ] Make it easier to send requests to non localnet environments
