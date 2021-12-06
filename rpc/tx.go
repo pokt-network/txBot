@@ -268,7 +268,7 @@ func getCurrentApp(addr types.Address, config config.Config) (app appsTypes.Appl
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error requesting a app @ ", url, err.Error())
+		fmt.Println("Error requesting an app @ ", url, err.Error())
 		return
 	}
 	defer resp.Body.Close()
