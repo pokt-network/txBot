@@ -45,7 +45,15 @@ func QueryHeight(config config.Config, rpcCtx *RpcContext) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("Current Height: %d\n", *res.JSON200.Height)
+	if res == nil {
+		fmt.Println("ERROR: Please check your RPC endpoint.")
+		return
+	}
+	if res.JSON200 != nil {
+		fmt.Printf("Current Height: %d\n", *res.JSON200.Height)
+	} else {
+		fmt.Printf("Error querying height: %v\n", *res.HTTPResponse)
+	}
 }
 
 func RelayHmy(config config.Config, rpcCtx *RpcContext) {
@@ -180,6 +188,11 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	res, err := rpcCtx.Client.PostClientRelayWithResponse(rpcCtx.Context, body)
 	if err != nil {
 		fmt.Println("PostClientRelayWithResponse error: ", err.Error())
+		return
+	}
+
+	if res == nil {
+		fmt.Println("ERROR: Please check your RPC endpoint.")
 		return
 	}
 

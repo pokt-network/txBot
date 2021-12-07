@@ -44,7 +44,7 @@ const (
 
 // AAT defines model for AAT.
 type AAT struct {
-	Version   *string `json:"version,omitempty"`
+	Version *string `json:"version,omitempty"`
 
 	// Application hex public key
 	AppPubKey *string `json:"app_pub_key,omitempty"`
@@ -426,9 +426,9 @@ type QueryDispatchResponse struct {
 }
 
 type Error struct {
-	Code *int64 `json:"code,omitempty"`
+	Code      *int64  `json:"code,omitempty"`
 	Codespace *string `json:"codespace,omitempty"`
-	Message *string `json:"message,omitempty"`
+	Message   *string `json:"message,omitempty"`
 }
 
 // QueryErrorRelayResponse defines model for QueryErrorRelayResponse.
@@ -664,7 +664,7 @@ type RelayMetadata struct {
 // the data payload of the request
 type RelayPayload struct {
 	// The actual data of the request string for the external chain
-	Data    *string      `json:"data,omitempty"`
+	Data *string `json:"data,omitempty"`
 
 	// The HTTP CRUD method
 	Method *string `json:"method,omitempty"`
