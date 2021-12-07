@@ -26,7 +26,6 @@ func (c *Config) GetRandomTransactionType() string {
 }
 
 func (mode *RequestMode) UnmarshalJSON(data []byte) error {
-
 	// Check if request mode is specified as a int.
 	if i, err := strconv.Atoi(string(data)); err == nil {
 		requestMode := RequestMode(i)

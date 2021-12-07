@@ -67,7 +67,7 @@ func startSendingTxOrReqs(c config.Config, rpcCtx *rpc.RpcContext) {
 				fmt.Printf(
 					"%s\nSleep for %d seconds \n%s\n",
 					strings.Repeat("~", 50),
-					interval,
+					interval/1000,
 					strings.Repeat("~", 50))
 				time.Sleep(time.Duration(interval) * time.Millisecond)
 				execTransOrReq(c, rpcCtx, getRandomTxOrReq(c))
