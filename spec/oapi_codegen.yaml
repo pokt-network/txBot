@@ -1,0 +1,6 @@
+output: spec/pocket.gen.go
+package: spec
+generate:
+  - types
+  - client
+  - skip-prune

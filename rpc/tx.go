@@ -1,10 +1,15 @@
-package main
+package rpc
 
 import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"strconv"
+
 	"github.com/pokt-network/pocket-core/app/cmd/rpc"
 	"github.com/pokt-network/pocket-core/codec"
 	types2 "github.com/pokt-network/pocket-core/codec/types"
@@ -20,11 +25,11 @@ import (
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	pocket "github.com/pokt-network/pocket-core/x/pocketcore"
 	"github.com/tjarratt/babble"
-	"io/ioutil"
-	"math/rand"
-	"net/http"
-	"strconv"
+
+	config "github.com/pokt-network/txbot/config"
 )
+
+const Fee int64 = int64(10000)
 
 var memCDC *codec.Codec
 
@@ -44,81 +49,84 @@ func memCodec() *codec.Codec {
 	return memCDC
 }
 
-func StakeNodeTransaction(config Config) {
-	signer := config.GetRandomPrivateKey()
-	pk := signer.PublicKey()
-	msg := nodesTypes.MsgStake{
-		PublicKey:  pk,
-		Chains:     GetRandomChains(),
-		Value:      GetRandomStake(),
-		ServiceUrl: GetRandomDomain(),
-	}
-	node := GetCurrentNode(types.Address(pk.Address()), config)
-	if node.PublicKey != nil {
-		msg = RandomizeNodeStakeMsg(node, msg)
-	}
-	SendRawTx(&msg, config, signer)
-}
-
-func UnstakeNodeTransaction(config Config) {
-	signer := config.GetRandomPrivateKey()
-	pk := signer.PublicKey()
-	msg := nodesTypes.MsgBeginUnstake{
-		Address: types.Address(pk.Address()),
-	}
-	SendRawTx(&msg, config, signer)
-}
-
-func UnjailNodeTransaction(config Config) {
-	signer := config.GetRandomPrivateKey()
-	pk := signer.PublicKey()
-	msg := nodesTypes.MsgUnjail{
-		ValidatorAddr: types.Address(pk.Address()),
-	}
-	SendRawTx(&msg, config, signer)
-}
-
-func SendTx(config Config) {
-	signer := config.GetRandomPrivateKey()
-	pk := signer.PublicKey()
-
-	signer2 := config.GetRandomPrivateKey()
-	pk2 := signer2.PublicKey()
-	msg := nodesTypes.MsgSend{
-		FromAddress: types.Address(pk.Address()),
-		ToAddress:   types.Address(pk2.Address()),
-		Amount:      GetRandomAmount(),
-	}
-	SendRawTx(&msg, config, signer)
-}
-
-func StakeAppTransaction(config Config) {
-	signer := config.GetRandomPrivateKey()
+func AppStakeTransaction(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgStake{
 		PubKey: pk,
-		Chains: GetRandomChains(),
-		Value:  GetRandomStake(),
+		Chains: getRandomChains(),
+		Value:  getRandomStake(),
 	}
-	app := GetCurrentApp(types.Address(pk.Address()), config)
+	app := getCurrentApp(types.Address(pk.Address()), config)
 	if app.PublicKey != nil {
-		msg = RandomizeAppStakeMsg(app, msg)
+		msg = randomizeAppStakeMsg(app, msg)
 	}
-	SendRawTx(&msg, config, signer)
+	sendRawTx(&msg, config, signer)
 }
 
-func UnstakeAppTransaction(config Config) {
-	signer := config.GetRandomPrivateKey()
+func AppUnstakeTransaction(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
 	pk := signer.PublicKey()
 	msg := appsTypes.MsgBeginUnstake{
 		Address: types.Address(pk.Address()),
 	}
-	SendRawTx(&msg, config, signer)
+	sendRawTx(&msg, config, signer)
 }
 
-func SendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
+func NodeSendTx(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
+	pk := signer.PublicKey()
+
+	// TODO: Is it okay for this to be the same as the signer above?
+	signer2 := config.GetRandomNodePrivateKey()
+	pk2 := signer2.PublicKey()
+
+	msg := nodesTypes.MsgSend{
+		FromAddress: types.Address(pk.Address()),
+		ToAddress:   types.Address(pk2.Address()),
+		Amount:      getRandomAmount(),
+	}
+	sendRawTx(&msg, config, signer)
+}
+
+func NodeStakeTransaction(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
+	pk := signer.PublicKey()
+	msg := nodesTypes.MsgStake{
+		PublicKey:  pk,
+		Chains:     getRandomChains(),
+		Value:      getRandomStake(),
+		ServiceUrl: getRandomDomain(),
+	}
+	node := getCurrentNode(types.Address(pk.Address()), config)
+	if node.PublicKey != nil {
+		msg = randomizeNodeStakeMsg(node, msg)
+	}
+	sendRawTx(&msg, config, signer)
+}
+
+func NodeUnstakeTransaction(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
+	pk := signer.PublicKey()
+	msg := nodesTypes.MsgBeginUnstake{
+		Address: types.Address(pk.Address()),
+	}
+	sendRawTx(&msg, config, signer)
+}
+
+func NodeUnjailTransaction(config config.Config) {
+	signer := config.GetRandomNodePrivateKey()
+	pk := signer.PublicKey()
+	msg := nodesTypes.MsgUnjail{
+		ValidatorAddr: types.Address(pk.Address()),
+	}
+	sendRawTx(&msg, config, signer)
+}
+
+func sendRawTx(msg types.ProtoMsg, config config.Config, signer crypto.PrivateKey) {
+	fmt.Println(msg)
 	b := babble.NewBabbler()
-	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, int64(10000), b.Babble(), GetLegacyCodec(config))
+	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, Fee, b.Babble(), getLegacyCodec(config))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -135,7 +143,7 @@ func SendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
 	}
 	jsonMsg, _ := memCodec().MarshalJSON(msg)
 	fmt.Println(string(jsonMsg))
-	resp, err := QueryRPC(config, "/v1/client/rawtx", j)
+	resp, err := queryRPC(config, "/v1/client/rawtx", j)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -143,8 +151,7 @@ func SendRawTx(msg types.ProtoMsg, config Config, signer crypto.PrivateKey) {
 	fmt.Println(resp)
 }
 
-func QueryRPC(config Config, path string, jsonArgs []byte) (string, error) {
-	//cliURL := app.GlobalConfig.PocketConfig.RemoteCLIURL + ":" + app.GlobalConfig.PocketConfig.RPCPort + path
+func queryRPC(config config.Config, path string, jsonArgs []byte) (string, error) {
 	cliURL := config.PocketEndpoint + path
 	req, err := http.NewRequest("POST", cliURL, bytes.NewBuffer(jsonArgs))
 	if err != nil {
@@ -176,7 +183,7 @@ func QueryRPC(config Config, path string, jsonArgs []byte) (string, error) {
 	return "", fmt.Errorf("the http status code was not okay: %d, and the status was: %s, with a response of %v", resp.StatusCode, resp.Status, string(bz))
 }
 
-func RandomizeAppStakeMsg(app appsTypes.Application, msg appsTypes.MsgStake) appsTypes.MsgStake {
+func randomizeAppStakeMsg(app appsTypes.Application, msg appsTypes.MsgStake) appsTypes.MsgStake {
 	if rand.Intn(4) < 2 {
 		msg.PubKey = app.PublicKey
 	}
@@ -189,7 +196,7 @@ func RandomizeAppStakeMsg(app appsTypes.Application, msg appsTypes.MsgStake) app
 	return msg
 }
 
-func RandomizeNodeStakeMsg(node nodesTypes.Validator, msg nodesTypes.MsgStake) nodesTypes.MsgStake {
+func randomizeNodeStakeMsg(node nodesTypes.Validator, msg nodesTypes.MsgStake) nodesTypes.MsgStake {
 	if rand.Intn(4) < 2 {
 		msg.PublicKey = node.PublicKey
 	}
@@ -205,17 +212,17 @@ func RandomizeNodeStakeMsg(node nodesTypes.Validator, msg nodesTypes.MsgStake) n
 	return msg
 }
 
-func GetLegacyCodec(c Config) bool {
+func getLegacyCodec(c config.Config) bool {
 	if c.LegacyCodecMode == 0 {
 		return false
 	} else if c.LegacyCodecMode == 1 {
 		return true
 	} else {
-		return 0 == rand.Intn(2)
+		return rand.Intn(2) == 0
 	}
 }
 
-func GetCurrentNode(addr types.Address, config Config) (val nodesTypes.Validator) {
+func getCurrentNode(addr types.Address, config config.Config) (val nodesTypes.Validator) {
 	url := config.PocketEndpoint + "/v1/query/node"
 	fmt.Println("URL:>", url)
 
@@ -240,7 +247,6 @@ func GetCurrentNode(addr types.Address, config Config) (val nodesTypes.Validator
 	}
 	fmt.Println(string(body))
 	err = val.UnmarshalJSON(body)
-	//err = memCodec().UnmarshalJSON(body, &val)
 	if err != nil {
 		fmt.Println("Error unmarshalling a node ", url, err.Error())
 		return
@@ -248,7 +254,7 @@ func GetCurrentNode(addr types.Address, config Config) (val nodesTypes.Validator
 	return
 }
 
-func GetCurrentApp(addr types.Address, config Config) (app appsTypes.Application) {
+func getCurrentApp(addr types.Address, config config.Config) (app appsTypes.Application) {
 	url := config.PocketEndpoint + "/v1/query/app"
 	fmt.Println("URL:>", url)
 
@@ -262,7 +268,7 @@ func GetCurrentApp(addr types.Address, config Config) (app appsTypes.Application
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error requesting a app @ ", url, err.Error())
+		fmt.Println("Error requesting an app @ ", url, err.Error())
 		return
 	}
 	defer resp.Body.Close()
@@ -272,7 +278,6 @@ func GetCurrentApp(addr types.Address, config Config) (app appsTypes.Application
 		return
 	}
 	err = app.UnmarshalJSON(body)
-	//err = application.UnmarshalJSON(body, &app)
 	if err != nil {
 		fmt.Println("Error unmarshalling a app ", url, err.Error())
 		return
@@ -280,7 +285,7 @@ func GetCurrentApp(addr types.Address, config Config) (app appsTypes.Application
 	return
 }
 
-func GetRandomChains() []string {
+func getRandomChains() []string {
 	var chains []string
 	for i := 0; i < rand.Intn(15); i++ {
 		chain := fmt.Sprintf("%04d", rand.Intn(99))
@@ -289,17 +294,17 @@ func GetRandomChains() []string {
 	return chains
 }
 
-func GetRandomStake() types.BigInt {
+func getRandomStake() types.BigInt {
 	b := types.NewInt(int64(rand.Int31()))
 	return b
 }
 
-func GetRandomAmount() types.BigInt {
+func getRandomAmount() types.BigInt {
 	b := types.NewInt(int64(rand.Int31()))
 	return b
 }
 
-func GetRandomDomain() string {
+func getRandomDomain() string {
 	prefix := "https://"
 	suffix := ".com:8081"
 	babbler := babble.NewBabbler()
@@ -307,9 +312,7 @@ func GetRandomDomain() string {
 }
 
 func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.PrivateKey, fee int64, memo string, legacyCodec bool) (transactionBz []byte, err error) {
-	// fees
 	fees := types.NewCoins(types.NewCoin(types.DefaultStakeDenom, types.NewInt(fee)))
-	// entroyp
 	entropy := rand.Int63()
 	signBytes, err := auth.StdSignBytes(chainID, entropy, fees, msg, memo)
 	if err != nil {
@@ -320,9 +323,15 @@ func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.Pri
 		return nil, err
 	}
 	s := authTypes.StdSignature{PublicKey: pk.PublicKey(), Signature: sig}
-	tx := authTypes.NewTx(msg, fees, s, memo, entropy)
-	if legacyCodec {
-		return auth.DefaultTxEncoder(cdc)(tx, 0)
+	stdTx := authTypes.StdTx{
+		Msg:       msg,
+		Fee:       fees,
+		Signature: s,
+		Memo:      memo,
+		Entropy:   entropy,
 	}
-	return auth.DefaultTxEncoder(cdc)(tx, -1)
+	if legacyCodec {
+		return auth.DefaultTxEncoder(cdc)(stdTx, 0)
+	}
+	return auth.DefaultTxEncoder(cdc)(stdTx, -1)
 }
