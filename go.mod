@@ -1,6 +1,6 @@
 module github.com/pokt-network/txbot
 
-go 1.13
+go 1.18
 
 replace github.com/tendermint/tendermint => github.com/pokt-network/tendermint v0.32.11-0.20210427155510-04e1c67f3eed // indirect
 
