@@ -1,7 +1,7 @@
 {
   "chain_id": "localnet",
   "legacy_codec_mode": 0,
-  "mode": "timerMode",
+  "mode": "selectMode",
   "mode_configs": {
     "timer_mode_config": {
       "interval_ms": 5000
