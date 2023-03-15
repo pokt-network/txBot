@@ -55,8 +55,8 @@ A tool to execute native Pocket transactions and call Pocket RPCs.
 ### Supported RPCs
 
 - **QueryHeight**: Query the height of the Pocket blockchain.
-- **relayEth**: Query the height of the Harmony blockchain by calling `hmyv2_blockNumber`.
-- **relayHmy**: Query the height of the Ethereum blockchain by calling `eth_blockNumber`.
+- **relayEthHeight**: Query the height of the Ethereum blockchain by calling `eth_blockNumber`.
+- **relayPolyHeight**: Query the height of the Polygon blockchain by calling `eth_blockNumber`.
 
 ## Configuration
 

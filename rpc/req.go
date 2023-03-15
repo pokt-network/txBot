@@ -14,9 +14,8 @@ import (
 )
 
 const (
-	Harmony  string = "0040" // Harmony mainnet shard 0.
+	Polygon  string = "0009" // Polygon mainnet
 	Ethereum string = "0021" // Ethereum mainnet.
-	IPFS     string = "1111" // IPFS.
 
 	Hasher = sha.SHA3_256
 )
@@ -56,13 +55,13 @@ func QueryHeight(config config.Config, rpcCtx *RpcContext) {
 	}
 }
 
-func RelayHmy(config config.Config, rpcCtx *RpcContext) {
-	data := `{"jsonrpc":"2.0", "method":"hmyv2_blockNumber", "params":[], "id":1}`
-	relay(Harmony, data, config, rpcCtx)
+func RelayPolyHeight(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":"v0_localnet"}`
+	relay(Polygon, data, config, rpcCtx)
 }
 
-func RelayEth(config config.Config, rpcCtx *RpcContext) {
-	data := `{"jsonrpc":"2.0", "method":"eth_blockNumber", "params":[], "id":1}`
+func RelayEthHeight(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":"v0_localnet"}`
 	relay(Ethereum, data, config, rpcCtx)
 }
 
@@ -70,7 +69,7 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	appPrivKey := config.GetRandomAppPrivateKey()
 	appPubKey := appPrivKey.PublicKey().RawString()
 
-	// TODO: Randomize this after adding support for multiple pocket endpoints.
+	// TODO: Cache this after adding support for business logic that checks which servicer is in the session
 	clientPrivKey := config.ServicerPrivateKey.Key
 	clientPubKey := clientPrivKey.PublicKey().RawString()
 
