@@ -49,10 +49,10 @@ func execTransOrReq(c config.Config, rpcCtx *rpc.RpcContext, txOrReq string) {
 		rpc.NodeUnjailTransaction(c)
 	case "queryHeight":
 		rpc.QueryHeight(c, rpcCtx)
-	case "relayEth":
-		rpc.RelayEth(c, rpcCtx)
-	case "relayHmy":
-		rpc.RelayHmy(c, rpcCtx)
+	case "relayEthHeight":
+		rpc.RelayEthHeight(c, rpcCtx)
+	case "relayPolyHeight":
+		rpc.RelayPolyHeight(c, rpcCtx)
 	default:
 		break
 	}

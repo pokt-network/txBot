@@ -1,20 +1,33 @@
-# TX-BOT
+# TX-BOT <!-- omit in toc -->
 
 A tool to execute native Pocket transactions and call Pocket RPCs.
+
+- [Quick Start](#quick-start)
+  - [Binary](#binary)
+  - [Docker](#docker)
+    - [Pulling](#pulling)
+    - [Building/Running](#buildingrunning)
+- [Usage Options](#usage-options)
+  - [Modes of Operation](#modes-of-operation)
+  - [Transactions](#transactions)
+  - [Supported RPCs](#supported-rpcs)
+- [Configuration](#configuration)
+- [\[TODO\] Client Generation](#todo-client-generation)
+- [Future Work (TODO)](#future-work-todo)
 
 ## Quick Start
 
 ### Binary
 
-`$ go build && ./txbot`
+`make build`
 
 ### Docker
 
-##### Pulling
+#### Pulling
 
 `$ docker-compose up`
 
-##### Building/Running
+#### Building/Running
 
 `$ docker-compose build && docker-compose up`
 
@@ -42,8 +55,8 @@ A tool to execute native Pocket transactions and call Pocket RPCs.
 ### Supported RPCs
 
 - **QueryHeight**: Query the height of the Pocket blockchain.
-- **relayEth**: Query the height of the Harmony blockchain by calling `hmyv2_blockNumber`.
-- **relayHmy**: Query the height of the Ethereum blockchain by calling `eth_blockNumber`.
+- **relayEthHeight**: Query the height of the Ethereum blockchain by calling `eth_blockNumber`.
+- **relayPolyHeight**: Query the height of the Polygon blockchain by calling `eth_blockNumber`.
 
 ## Configuration
 

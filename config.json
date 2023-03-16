@@ -1,7 +1,7 @@
 {
   "chain_id": "localnet",
   "legacy_codec_mode": 0,
-  "mode": "timerMode",
+  "mode": "selectMode",
   "mode_configs": {
     "timer_mode_config": {
       "interval_ms": 5000
@@ -9,7 +9,7 @@
     "random_mode_config": {},
     "select_mode_config": {},
     "manual_mode_config": {
-      "tx_req_name": "relayHmy"
+      "tx_req_name": "relayPolyHeight"
     },
     "burst_mode_config": {
       "interval_ms": 500,
@@ -24,8 +24,8 @@
     "nodeStake",
     "nodeUnjail",
     "queryHeight",
-    "relayEth",
-    "relayHmy"
+    "relayEthHeight",
+    "relayPolyHeight"
   ],
   "pocket_endpoint": "http://localhost:8082",
   "servicer_private_key": "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743",
