@@ -48,7 +48,8 @@ func execTransOrReq(c config.Config, rpcCtx *rpc.RpcContext, txOrReq string) {
 	case "nodeUnjail":
 		rpc.NodeUnjailTransaction(c)
 	case "queryHeight":
-		rpc.QueryHeight(c, rpcCtx)
+		height := rpc.QueryHeight(c, rpcCtx)
+		fmt.Println("Current height: ", height)
 	case "relayEthHeight":
 		rpc.RelayEthHeight(c, rpcCtx)
 	case "relayPolyHeight":

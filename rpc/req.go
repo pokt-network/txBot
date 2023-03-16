@@ -33,12 +33,12 @@ func NewRpcContext(config config.Config) *RpcContext {
 	}
 	return &RpcContext{
 		Client:             client,
-		Context:            context.TODO(), // Not imporant at the moment.
+		Context:            context.TODO(), // Not important at the moment.
 		SessionBlockHeight: int64(0),
 	}
 }
 
-func QueryHeight(config config.Config, rpcCtx *RpcContext) {
+func QueryHeight(config config.Config, rpcCtx *RpcContext) int64 {
 	var body interface{}
 	res, err := rpcCtx.Client.PostQueryHeightWithResponse(rpcCtx.Context, body)
 	if err != nil {
@@ -46,13 +46,13 @@ func QueryHeight(config config.Config, rpcCtx *RpcContext) {
 	}
 	if res == nil {
 		fmt.Println("ERROR: Please check your RPC endpoint.")
-		return
 	}
 	if res.JSON200 != nil {
-		fmt.Printf("Current Height: %d\n", *res.JSON200.Height)
+		return *res.JSON200.Height
 	} else {
 		fmt.Printf("Error querying height: %v\n", *res.HTTPResponse)
 	}
+	return int64(0)
 }
 
 func RelayPolyHeight(config config.Config, rpcCtx *RpcContext) {
@@ -203,13 +203,14 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	case 400:
 		{
 			if res.JSON400.Error != nil {
-				fmt.Println("Error sending relay: ", *res.JSON400.Error.Message)
+				fmt.Printf("Error sending relay (height %d): %s", rpcCtx.SessionBlockHeight, *res.JSON400.Error.Message)
+				rpcCtx.SessionBlockHeight = QueryHeight(config, rpcCtx)
 			}
 			// Other errors could potentially happen but we're only accounting
 			// for incorrect session block height for now.
 			if res.JSON400.Dispatch != nil {
+				fmt.Printf("The session block height has been updated from %d to %d. Please try re-sending the relay.", rpcCtx.SessionBlockHeight, *res.JSON400.Dispatch.Session.Header.SessionHeight)
 				rpcCtx.SessionBlockHeight = *res.JSON400.Dispatch.Session.Header.SessionHeight
-				fmt.Println("The session block height has been updated. Please try re-sending the relay.")
 			}
 			return
 		}
