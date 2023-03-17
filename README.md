@@ -60,7 +60,7 @@ A tool to execute native Pocket transactions and call Pocket RPCs.
 
 ## Configuration
 
-See the [config](config.json) for an example configuration that works with the `pokt-net-dev-tm`stack in [pocket-e2e-stack](https://github.com/pokt-foundation/pocket-e2e-stack).
+See the [config](config.json) for an example configuration that works with the `pokt-net-dev-tm`stack in [pocket-e2e-stack](https://github.com/pokt-network/pocket-e2e-stack).
 
 ## [TODO] Client Generation
 
