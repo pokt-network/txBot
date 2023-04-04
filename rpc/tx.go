@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/pokt-network/pocket-core/app/cmd/rpc"
@@ -123,10 +124,24 @@ func NodeUnjailTransaction(config config.Config) {
 	sendRawTx(&msg, config, signer)
 }
 
+func generateRandomString() string {
+	if _, err := os.Stat("/usr/share/dict/words"); err == nil {
+		b := babble.NewBabbler()
+		return b.Babble()
+	}
+
+	var letters = []rune(
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	bytes := make([]rune, 10)
+	for i := range bytes {
+		bytes[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(bytes)
+}
+
 func sendRawTx(msg types.ProtoMsg, config config.Config, signer crypto.PrivateKey) {
 	fmt.Println(msg)
-	b := babble.NewBabbler()
-	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, Fee, b.Babble(), getLegacyCodec(config))
+	txBz, err := newTxBz(memCodec(), msg, config.ChainID, signer, Fee, generateRandomString(), getLegacyCodec(config))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -307,8 +322,7 @@ func getRandomAmount() types.BigInt {
 func getRandomDomain() string {
 	prefix := "https://"
 	suffix := ".com:8081"
-	babbler := babble.NewBabbler()
-	return prefix + babbler.Babble() + suffix
+	return prefix + generateRandomString() + suffix
 }
 
 func newTxBz(cdc *codec.Codec, msg types.ProtoMsg, chainID string, pk crypto.PrivateKey, fee int64, memo string, legacyCodec bool) (transactionBz []byte, err error) {
