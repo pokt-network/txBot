@@ -13,8 +13,15 @@ import (
 	rpc "github.com/pokt-network/txbot/rpc"
 )
 
+const defaultConfigFile = "config.json"
+
 func main() {
-	config := config.GetConfigFromFile()
+	configFile := os.Getenv("TX_CONFIG_FILE")
+	fmt.Println(configFile)
+	if configFile == "" {
+		configFile = defaultConfigFile
+	}
+	config := config.GetConfigFromFile(configFile)
 	startSendingTxOrReqs(config, rpc.NewRpcContext(config))
 }
 

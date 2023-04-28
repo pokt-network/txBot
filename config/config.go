@@ -63,8 +63,8 @@ func (pk *PrivateKey) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func GetConfigFromFile() Config {
-	jsonFile, err := os.Open("config.json")
+func GetConfigFromFile(configFile string) Config {
+	jsonFile, err := os.Open(configFile)
 	if err != nil {
 		panic("Error opening config file: " + err.Error())
 	}
