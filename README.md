@@ -15,6 +15,13 @@ A tool to execute native Pocket transactions and call Pocket RPCs.
 - [\[TODO\] Client Generation](#todo-client-generation)
 - [Future Work (TODO)](#future-work-todo)
 
+**Too Long; Just Watch (tl;jw)**
+
+If you spin up a [LocalNet](https://github.com/pokt-network/pocket-core/blob/staging/doc/guides/localnet.md), you can either use burst mode or send a single transaction as seen below.
+
+https://user-images.githubusercontent.com/1892194/235985497-82969f83-b2d1-4a3e-ab4d-26a033153713.mov
+
+
 ## Quick Start
 
 ### Binary
