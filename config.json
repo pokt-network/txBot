@@ -25,7 +25,8 @@
     "nodeUnjail",
     "queryHeight",
     "relayEthHeight",
-    "relayPolyHeight"
+    "relayPolyHeight",
+    "relayPocketHeight"
   ],
   "pocket_endpoint": "http://localhost:8082",
   "servicer_private_key": "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743",
@@ -37,5 +38,11 @@
   ],
   "app_private_keys": [
     "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743"
-  ]
+  ],
+  "url_mapping": {
+    "http://node1.dev.pokt:8081": "http://localhost:8082",
+    "http://node2.dev.pokt:8081": "http://localhost:8083",
+    "http://node3.dev.pokt:8081": "http://localhost:8084",
+    "http://node4.dev.pokt:8081": "http://localhost:8085"
+  }
 }

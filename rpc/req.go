@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/pokt-network/pocket-core/crypto"
 	config "github.com/pokt-network/txbot/config"
 	spec "github.com/pokt-network/txbot/spec"
 )
@@ -17,13 +18,25 @@ const (
 	Polygon  string = "0009" // Polygon mainnet
 	Ethereum string = "0021" // Ethereum mainnet.
 
+	PocketMainNet string = "0001" // Pocket TestNet
+	PocketTestNet string = "0002" // Pocket TestNet
+
 	Hasher = sha.SHA3_256
 )
 
 type RpcContext struct {
-	Client             *spec.ClientWithResponses
-	Context            context.Context
-	SessionBlockHeight int64
+	Config  config.Config
+	Client  *spec.ClientWithResponses // This client can be used for general RPC calls such as retrieving the height
+	Context context.Context
+
+	// Application specific fields.
+	AppPrivKey crypto.PrivateKey
+	AppPubKey  string
+
+	// Session specific fields.
+	Session       *spec.Session
+	Servicer      *spec.Node                // The servicer node that will be used for relaying.
+	SessionClient *spec.ClientWithResponses // A client specific to the servicer being used in the session
 }
 
 func NewRpcContext(config config.Config) *RpcContext {
@@ -32,9 +45,10 @@ func NewRpcContext(config config.Config) *RpcContext {
 		panic("Could not initialize RPC client.")
 	}
 	return &RpcContext{
-		Client:             client,
-		Context:            context.TODO(), // Not important at the moment.
-		SessionBlockHeight: int64(0),
+		Config:  config,
+		Client:  client,
+		Context: context.TODO(), // Not important at the moment.
+		Session: nil,
 	}
 }
 
@@ -65,24 +79,24 @@ func RelayEthHeight(config config.Config, rpcCtx *RpcContext) {
 	relay(Ethereum, data, config, rpcCtx)
 }
 
-func relay(blockchain string, data string, config config.Config, rpcCtx *RpcContext) {
-	appPrivKey := config.GetRandomAppPrivateKey()
-	appPubKey := appPrivKey.PublicKey().RawString()
+func RelayPocketHeight(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0","method":"height","params":[],"id":"v0_localnet"}`
+	relay(PocketTestNet, data, config, rpcCtx)
+}
 
-	// TODO: Cache this after adding support for business logic that checks which servicer is in the session
-	clientPrivKey := config.ServicerPrivateKey.Key
-	clientPubKey := clientPrivKey.PublicKey().RawString()
+func relay(blockchain string, data string, config config.Config, rpcCtx *RpcContext) {
+	if rpcCtx.Session == nil {
+		fmt.Println("No session found...")
+		createSession(blockchain, config, rpcCtx)
+	}
 
 	// Get the blockchain service node.
-	serviceNode := getServiceNode(clientPrivKey.PublicKey().Address().String(), rpcCtx)
-	if serviceNode == nil {
-		fmt.Println("Could not find service node for key:", clientPubKey)
-		return
-	}
+
+	servicerPubKey := rpcCtx.Servicer.PublicKey
 
 	// Prepare metadata.
 	meta := spec.RelayMetadata{
-		BlockHeight: &rpcCtx.SessionBlockHeight,
+		BlockHeight: rpcCtx.Session.Header.SessionHeight,
 	}
 
 	// Prepare payload.
@@ -116,8 +130,8 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	// Prepare AAT.
 	aatVersion := "0.0.1"
 	aat := spec.AAT{
-		AppPubKey:    &appPubKey,
-		ClientPubKey: &clientPubKey,
+		AppPubKey:    &rpcCtx.AppPubKey,
+		ClientPubKey: &rpcCtx.AppPubKey,
 		Signature:    new(string),
 		Version:      &aatVersion,
 	}
@@ -129,7 +143,7 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 		return
 	}
 	aatHash := hash(aatBytes)
-	appSig, err := appPrivKey.Sign(aatHash)
+	appSig, err := rpcCtx.AppPrivKey.Sign(aatHash)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -139,14 +153,13 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 
 	// Prepare proof.
 	entropy := int64(rand.Uint32())
-	servicerPubKey := *serviceNode.PublicKey
 	proof := spec.RelayProof{
 		Aat:                &aat,
 		Blockchain:         &blockchain,
 		Entropy:            &entropy,
 		RequestHash:        &requestHashString,
-		ServicerPubKey:     &servicerPubKey,
-		SessionBlockHeight: &rpcCtx.SessionBlockHeight,
+		ServicerPubKey:     servicerPubKey,
+		SessionBlockHeight: rpcCtx.Session.Header.SessionHeight,
 		Signature:          new(string),
 	}
 
@@ -159,7 +172,7 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 		Signature          string `json:"signature"`
 		Token              string `json:"token"`
 		RequestHash        string `json:"request_hash"`
-	}{entropy, rpcCtx.SessionBlockHeight, servicerPubKey, blockchain, "", hex.EncodeToString(aatHash), requestHashString}
+	}{entropy, *rpcCtx.Session.Header.SessionHeight, *servicerPubKey, blockchain, "", hex.EncodeToString(aatHash), requestHashString}
 
 	// Sign proof.
 	proofBytes, err := json.Marshal(proofForSig)
@@ -168,13 +181,13 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 		return
 	}
 	proofHash := hash(proofBytes)
-	clientSig, err := clientPrivKey.Sign(proofHash)
+	appSigProof, err := rpcCtx.AppPrivKey.Sign(proofHash)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	clientSigString := hex.EncodeToString(clientSig)
-	proof.Signature = &clientSigString
+	appSigProofString := hex.EncodeToString(appSigProof)
+	proof.Signature = &appSigProofString
 
 	// Prepare relay request.
 	body := spec.PostClientRelayJSONRequestBody{
@@ -184,7 +197,7 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	}
 
 	// Do relay.
-	res, err := rpcCtx.Client.PostClientRelayWithResponse(rpcCtx.Context, body)
+	res, err := rpcCtx.SessionClient.PostClientRelayWithResponse(rpcCtx.Context, body)
 	if err != nil {
 		fmt.Println("PostClientRelayWithResponse error: ", err.Error())
 		return
@@ -203,14 +216,10 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	case 400:
 		{
 			if res.JSON400.Error != nil {
-				fmt.Printf("Error sending relay (height %d): %s", rpcCtx.SessionBlockHeight, *res.JSON400.Error.Message)
-				rpcCtx.SessionBlockHeight = QueryHeight(config, rpcCtx)
+				fmt.Printf("Error sending relay (height %d): %s", *rpcCtx.Session.Header.SessionHeight, *res.JSON400.Error.Message)
 			}
-			// Other errors could potentially happen but we're only accounting
-			// for incorrect session block height for now.
 			if res.JSON400.Dispatch != nil {
-				fmt.Printf("The session block height has been updated from %d to %d. Please try re-sending the relay.", rpcCtx.SessionBlockHeight, *res.JSON400.Dispatch.Session.Header.SessionHeight)
-				rpcCtx.SessionBlockHeight = *res.JSON400.Dispatch.Session.Header.SessionHeight
+				panic(fmt.Sprintf("Could not send the relay due to %+v\n", *res.JSON400))
 			}
 			return
 		}
@@ -219,18 +228,50 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	}
 }
 
-func getServiceNode(address string, rpcCtx *RpcContext) (val *spec.Node) {
-	body := spec.PostQueryNodeJSONRequestBody{
-		Address: &address,
+// WARNING: There is no business logic to expiring sessions. The client needs to be restarted.
+func createSession(blockchain string, config config.Config, rpcCtx *RpcContext) {
+	rpcCtx.AppPrivKey = config.GetRandomAppPrivateKey()
+	rpcCtx.AppPubKey = rpcCtx.AppPrivKey.PublicKey().RawString()
+
+	height := QueryHeight(config, rpcCtx)
+	body := spec.PostClientDispatchJSONRequestBody{
+		AppPublicKey:  &rpcCtx.AppPubKey,
+		Chain:         &blockchain,
+		SessionHeight: &height,
 	}
-	res, err := rpcCtx.Client.PostQueryNodeWithResponse(rpcCtx.Context, body)
+	fmt.Printf("Creating a new session for App with Pub Key %s for Chain %s at height %d\n", *body.AppPublicKey, *body.Chain, *body.SessionHeight)
+
+	res, err := rpcCtx.Client.PostClientDispatchWithResponse(rpcCtx.Context, body)
 	if err != nil {
-		fmt.Println(err)
-		val = nil
+		fmt.Println("PostClientRelayWithResponse error: ", err.Error())
 		return
 	}
-	val = res.JSON200
-	return
+
+	if res.JSON200 == nil {
+		fmt.Printf("Error dispatching new session: %+v\n", *res.HTTPResponse)
+		panic("Need to be able to dispatch a session to continue")
+	} else {
+	}
+
+	// fmt.Printf("Dispatched a new session. \n\t Body: %+v\n\t Response: %+v\n", res.Body, res.HTTPResponse)
+	fmt.Printf("Dispatched a new session at height: %d \n", *res.JSON200.Session.Header.SessionHeight)
+	rpcCtx.Session = res.JSON200.Session
+	rpcCtx.Servicer = &(*rpcCtx.Session.Nodes)[0]
+
+	mappedUrl, ok := rpcCtx.Config.UrlMapping[*rpcCtx.Servicer.ServiceUrl]
+	var client *spec.ClientWithResponses
+	var clientErr error
+	if ok {
+		fmt.Printf("Using mapped url from %s to %s\n.", *rpcCtx.Servicer.ServiceUrl, mappedUrl)
+		client, clientErr = spec.NewClientWithResponses(fmt.Sprintf("%s/v1", mappedUrl))
+	} else {
+		fmt.Println("Using original url: ", *rpcCtx.Servicer.ServiceUrl)
+		client, clientErr = spec.NewClientWithResponses(fmt.Sprintf("%s/v1", *rpcCtx.Servicer.ServiceUrl))
+	}
+	if clientErr != nil {
+		panic("Could not initialize RPC client for servicer.")
+	}
+	rpcCtx.SessionClient = client
 }
 
 func hash(b []byte) []byte {

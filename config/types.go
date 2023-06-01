@@ -67,13 +67,14 @@ type AppConfig struct {
 }
 
 type Config struct {
-	ChainID            string       `json:"chain_id"`
-	PocketEndpoint     string       `json:"pocket_endpoint"`
-	LegacyCodecMode    int          `json:"legacy_codec_mode"`
-	Mode               RequestMode  `json:"mode"`
-	ModeConfigs        ModeConfig   `json:"mode_configs"`
-	TxReqTypes         []string     `json:"tx_req_types"`
-	NodePrivateKeys    []PrivateKey `json:"node_private_keys"`
-	AppPrivateKeys     []PrivateKey `json:"app_private_keys"`
-	ServicerPrivateKey PrivateKey   `json:"servicer_private_key"`
+	ChainID            string            `json:"chain_id"`
+	PocketEndpoint     string            `json:"pocket_endpoint"`
+	LegacyCodecMode    int               `json:"legacy_codec_mode"`
+	Mode               RequestMode       `json:"mode"`
+	ModeConfigs        ModeConfig        `json:"mode_configs"`
+	TxReqTypes         []string          `json:"tx_req_types"`
+	NodePrivateKeys    []PrivateKey      `json:"node_private_keys"`
+	AppPrivateKeys     []PrivateKey      `json:"app_private_keys"`
+	ServicerPrivateKey PrivateKey        `json:"servicer_private_key"`
+	UrlMapping         map[string]string `json:"url_mapping"`
 }

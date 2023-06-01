@@ -61,6 +61,8 @@ func execTransOrReq(c config.Config, rpcCtx *rpc.RpcContext, txOrReq string) {
 		rpc.RelayEthHeight(c, rpcCtx)
 	case "relayPolyHeight":
 		rpc.RelayPolyHeight(c, rpcCtx)
+	case "relayPocketHeight":
+		rpc.RelayPocketHeight(c, rpcCtx)
 	default:
 		break
 	}
