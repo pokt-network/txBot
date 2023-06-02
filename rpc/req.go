@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	Polygon  string = "0009" // Polygon mainnet
-	Ethereum string = "0021" // Ethereum mainnet.
+	Polygon        string = "0009" // Polygon mainnet
+	Ethereum       string = "0021" // Ethereum mainnet.
+	EthereumGoerli string = "0026" // Ethereum Goerli testnet
 
 	PocketMainNet string = "0001" // Pocket TestNet
 	PocketTestNet string = "0002" // Pocket TestNet
@@ -77,6 +78,11 @@ func RelayPolyHeight(config config.Config, rpcCtx *RpcContext) {
 func RelayEthHeight(config config.Config, rpcCtx *RpcContext) {
 	data := `{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":"v0_localnet"}`
 	relay(Ethereum, data, config, rpcCtx)
+}
+
+func RelayEthGoerliHeight(config config.Config, rpcCtx *RpcContext) {
+	data := `{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":"v0_localnet"}`
+	relay(EthereumGoerli, data, config, rpcCtx)
 }
 
 func RelayPocketHeight(config config.Config, rpcCtx *RpcContext) {

@@ -59,6 +59,8 @@ func execTransOrReq(c config.Config, rpcCtx *rpc.RpcContext, txOrReq string) {
 		fmt.Println("Current height: ", height)
 	case "relayEthHeight":
 		rpc.RelayEthHeight(c, rpcCtx)
+	case "relayEthGoerliHeight":
+		rpc.RelayEthGoerliHeight(c, rpcCtx)
 	case "relayPolyHeight":
 		rpc.RelayPolyHeight(c, rpcCtx)
 	case "relayPocketHeight":

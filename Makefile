@@ -29,17 +29,11 @@ swagger_check: # Check if swagger is installed
 start:
 	go build && ./txbot
 
-.PHONY: start_burst
-## Compile & start a tx-bot instance in burst most
-start_burst:
+.PHONY: start_testnet
+## Compile & start a tx-bot instance pointing to testnet
+start_testnet:
 	go build
-	TX_CONFIG_FILE="burst_config.json" ./txbot
-
-.PHONY: start_burst
-## Compile & start a tx-bot instance in burst most
-start_testnet_burst:
-	go build
-	TX_CONFIG_FILE="burst_testnet_config.json" ./txbot
+	TX_CONFIG_FILE="config_testnet.json" ./txbot
 
 .PHONY: gen_client_spec
 ## Regenerate the go client based on the rpc spec

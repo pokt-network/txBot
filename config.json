@@ -1,7 +1,7 @@
 {
   "chain_id": "localnet",
   "legacy_codec_mode": 0,
-  "mode": "selectMode",
+  "mode": "burstMode",
   "mode_configs": {
     "timer_mode_config": {
       "interval_ms": 5000
@@ -9,12 +9,12 @@
     "random_mode_config": {},
     "select_mode_config": {},
     "manual_mode_config": {
-      "tx_req_name": "relayPolyHeight"
+      "tx_req_name": "relayEthHeight"
     },
     "burst_mode_config": {
-      "interval_ms": 500,
-      "num_requests": 10,
-      "tx_req_name": "queryHeight"
+      "interval_ms": 5,
+      "num_requests": 10000,
+      "tx_req_name": "nodeSend"
     }
   },
   "tx_req_types": [
