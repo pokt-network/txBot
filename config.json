@@ -1,7 +1,7 @@
 {
   "chain_id": "localnet",
   "legacy_codec_mode": 0,
-  "mode": "burstMode",
+  "mode": "manualMode",
   "mode_configs": {
     "timer_mode_config": {
       "interval_ms": 5000
@@ -14,7 +14,7 @@
     "burst_mode_config": {
       "interval_ms": 5,
       "num_requests": 10000,
-      "tx_req_name": "nodeSend"
+      "tx_req_name": "relayEthHeight"
     }
   },
   "tx_req_types": [
@@ -25,19 +25,20 @@
     "nodeUnjail",
     "queryHeight",
     "relayEthHeight",
+    "relayEthGoerliHeight",
     "relayPolyHeight",
     "relayPocketHeight"
   ],
   "pocket_endpoint": "http://localhost:8082",
+  "app_private_keys": [
+    "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743"
+  ],
   "servicer_private_key": "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743",
   "node_private_keys": [
     "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743",
     "f1f0b5ab116830b0bd0f8eb24544fe90580f80940cf05bd90297826de91ebc4aec69e25c0f2d79e252c1fe0eb8ae07c3a3d8ff7bd616d736f2ded2e9167488b2",
     "91d19aec06f084ca925b15641fae86111d7e2fe4a0eed1f26b28bf6c65156b8aabc364918abe9e3966564f60baf74d7ea1c4f3efe92889de066e617989c54283",
     "4c758ab70a4ae1b254be684243809c34d739dcb30fcdeae63bb2317b38301298440d87986346d7f5edeb12921d6ad4782b3d92d84344afe030220d02071cc8ae"
-  ],
-  "app_private_keys": [
-    "5efedbbc3d3d6f82d78eaf21258c81f462f3a25268be0018d4d75e1a4787bd14eb0cf2a891382677f03c1b080ec270c693dda7a4c3ee4bcac259ad47c5fe0743"
   ],
   "url_mapping": {
     "http://node1.dev.pokt:8081": "http://localhost:8082",

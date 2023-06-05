@@ -217,6 +217,8 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 	switch res.StatusCode() {
 	case 200:
 		{
+			relayHeight := QueryHeight(rpcCtx.Config, rpcCtx)
+			fmt.Println("Successful relay at height: ", relayHeight)
 			fmt.Println(string(res.Body))
 		}
 	case 400:
@@ -268,7 +270,7 @@ func createSession(blockchain string, config config.Config, rpcCtx *RpcContext) 
 	var client *spec.ClientWithResponses
 	var clientErr error
 	if ok {
-		fmt.Printf("Using mapped url from %s to %s\n.", *rpcCtx.Servicer.ServiceUrl, mappedUrl)
+		fmt.Printf("Using mapped url from %s to %s.\n", *rpcCtx.Servicer.ServiceUrl, mappedUrl)
 		client, clientErr = spec.NewClientWithResponses(fmt.Sprintf("%s/v1", mappedUrl))
 	} else {
 		fmt.Println("Using original url: ", *rpcCtx.Servicer.ServiceUrl)
