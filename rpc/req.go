@@ -17,7 +17,7 @@ import (
 const (
 	Polygon        string = "0009" // Polygon mainnet
 	Ethereum       string = "0021" // Ethereum mainnet.
-	EthereumGoerli string = "0026" // Ethereum Goerli testnet
+	EthereumGoerli string = "0020" // Ethereum Goerli testnet
 
 	PocketMainNet string = "0001" // Pocket TestNet
 	PocketTestNet string = "0002" // Pocket TestNet
