@@ -12,9 +12,9 @@
       "tx_req_name": "relayEthGoerliHeight"
     },
     "burst_mode_config": {
-      "interval_ms": 5,
-      "num_requests": 10000,
-      "tx_req_name": "relayEthGoerliHeight"
+      "interval_ms": 3,
+      "num_requests": 200000,
+      "tx_req_name": "nodeSend"
     }
   },
   "tx_req_types": [

@@ -2,6 +2,7 @@ package rpc
 
 import (
 	sha "crypto"
+	"strings"
 
 	"context"
 	"encoding/hex"
@@ -214,17 +215,17 @@ func relay(blockchain string, data string, config config.Config, rpcCtx *RpcCont
 		return
 	}
 
+	relayHeight := QueryHeight(rpcCtx.Config, rpcCtx)
 	switch res.StatusCode() {
 	case 200:
 		{
-			relayHeight := QueryHeight(rpcCtx.Config, rpcCtx)
 			fmt.Println("Successful relay at height: ", relayHeight)
 			fmt.Println(string(res.Body))
 		}
 	case 400:
 		{
 			if res.JSON400.Error != nil {
-				fmt.Printf("Error sending relay (height %d): %s", *rpcCtx.Session.Header.SessionHeight, *res.JSON400.Error.Message)
+				fmt.Printf("Error sending relay at height %d for session at height %d for chain %s with error: %s", relayHeight, *rpcCtx.Session.Header.SessionHeight, blockchain, *res.JSON400.Error.Message)
 			}
 			if res.JSON400.Dispatch != nil {
 				panic(fmt.Sprintf("Could not send the relay due to %+v\n", *res.JSON400))
@@ -264,11 +265,14 @@ func createSession(blockchain string, config config.Config, rpcCtx *RpcContext) 
 	// fmt.Printf("Dispatched a new session. \n\t Body: %+v\n\t Response: %+v\n", res.Body, res.HTTPResponse)
 	fmt.Printf("Dispatched a new session at height: %d \n", *res.JSON200.Session.Header.SessionHeight)
 	rpcCtx.Session = res.JSON200.Session
-	rpcCtx.Servicer = &(*rpcCtx.Session.Nodes)[0]
+	rpcCtx.Servicer = &(*rpcCtx.Session.Nodes)[1]
 
-	mappedUrl, ok := rpcCtx.Config.UrlMapping[*rpcCtx.Servicer.ServiceUrl]
+	chains := strings.Join(*rpcCtx.Servicer.Chains, ",")
+	fmt.Printf("Connecting to servicer with address %s at service URL %s supporting chains %v \n", *rpcCtx.Servicer.Address, *rpcCtx.Servicer.ServiceUrl, chains)
+
 	var client *spec.ClientWithResponses
 	var clientErr error
+	mappedUrl, ok := rpcCtx.Config.UrlMapping[*rpcCtx.Servicer.ServiceUrl]
 	if ok {
 		fmt.Printf("Using mapped url from %s to %s.\n", *rpcCtx.Servicer.ServiceUrl, mappedUrl)
 		client, clientErr = spec.NewClientWithResponses(fmt.Sprintf("%s/v1", mappedUrl))
